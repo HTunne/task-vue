@@ -1,14 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import TaskListView from '../views/TaskList.vue'
+import TaskNoneSelected from '../views/TaskList/TaskNoneSelected.vue'
+import TaskAdd from '../views/TaskList/TaskAdd.vue'
+import TaskEdit from '../views/TaskList/TaskEdit.vue'
 
 Vue.use(VueRouter)
 
   const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home
+    component: TaskListView,
+    children: [
+      { path: '', name: 'TaskNoneSelected', component: TaskNoneSelected },
+      { path: 'add', name: 'TaskAdd', component: TaskAdd },
+      { path: 'edit/:uuid', name: 'TaskEdit', component: TaskEdit }
+    ]
   },
   {
     path: '/about',

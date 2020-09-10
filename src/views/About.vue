@@ -1,5 +1,29 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+  <div class='aclass'>
+   <div class='b'>
+   </div>
+   <div class='c'>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   <p>hj</p>
+   </div>
+   <div class="d">
+   </div>
+  </div>
   </div>
 </template>
+
+<style>
+  .aclass {
+    height: 200px;
+    width: 200px;
+    backgroung-color: red;
+    display: flex;
+  }
+<style>
