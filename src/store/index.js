@@ -298,6 +298,7 @@ export default new Vuex.Store({
           ]
   },
   getters: {
+      getTasks: state => state.tasks.slice(),
       getSelectedTaskUUID: state => state.selectedTaskUUID,
       getLoadingTasks: state => state.loadingTasks,
       getSelectedTask: state => {
