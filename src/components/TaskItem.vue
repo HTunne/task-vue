@@ -5,10 +5,10 @@
                 <div style="{ flex-direction: row; display: flex; align-items: center;}" ref="taskdiv">
                     <v-list-item-avatar :color="idAvatarColor">{{ task.id }}</v-list-item-avatar>
                     <v-list-item-content>
+                        <v-list-item-subtitle v-text="task.description">
+                        </v-list-item-subtitle>
                         <v-btn depressed small outlined left color="primary" v-if="'project' in task" v-text="task.project" class="project-btn text-none font-weight-bold" @click.stop="$emit('update:search', 'p:' + task.project)">
                         </v-btn>
-                        <v-list-item-title v-text="task.description">
-                        </v-list-item-title>
                         <v-item-group v-if="'tags' in task">
                             <v-btn
                                       v-for="tag in task.tags"
@@ -24,7 +24,7 @@
                             </v-btn>
                         </v-item-group>
                     </v-list-item-content>
-                    <v-list-item-avatar class="urgency-avatar" v-text="task.urgency"></v-list-item-avatar>
+                    <v-list-item-avatar class="urgency-avatar" v-text="task.urgency" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
                         <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="showDonePrompt = 1"><v-icon>mdi-check</v-icon></v-btn>
                     </v-list-item-action>
@@ -68,8 +68,6 @@ export default {
     props: {
         task: Object
     },
-    methods: {
-    },
     computed: {
         idAvatarColor() {
             if (this.task.status == 'completed') {
@@ -79,6 +77,12 @@ export default {
             } else {
                 return "grey";
             }
+        },
+        urgencyColor() {
+            let val = 1 - (this.task.urgency/this.$store.getters.getUrgencyScaleMax)
+            val = val * (val > 0) * 120
+
+            return 'hsl(' + val + ',80%,50%)'
         },
         divheight() {
             return this.$refs.taskdiv.clientHeight;
@@ -102,6 +106,5 @@ export default {
 }
 
 .urgency-avatar {
-    color: red !important;
 }
 </style>

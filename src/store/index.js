@@ -8,6 +8,7 @@ export default new Vuex.Store({
       selectedTaskUUID: undefined,
       loadingTasks: true,
       taskFormView: undefined,
+      urgencyScaleMax: 5,
       tasks: [
           {
               "description": "This is a test",
@@ -52,6 +53,7 @@ export default new Vuex.Store({
               "id": 0,
               "modified": "Fri, 04 Sep 2020 18:25:58 GMT",
               "status": "completed",
+              "tags": ["next"],
               "urgency": 0.56,
               "uuid": "9af2fbf9-09ae-46b2-a34b-b6169ddd2f94"
           },
@@ -157,6 +159,7 @@ export default new Vuex.Store({
               "modified": "Fri, 04 Sep 2020 18:13:54 GMT",
               "status": "pending",
               "urgency": 0.56,
+              "tags": ["next"],
               "uuid": "29376b80-c526-4948-a091-20a3ae1d6ad1"
           },
           {
@@ -301,6 +304,7 @@ export default new Vuex.Store({
       getTasks: state => state.tasks.slice(),
       getSelectedTaskUUID: state => state.selectedTaskUUID,
       getLoadingTasks: state => state.loadingTasks,
+      getUrgencyScaleMax: state => state.urgencyScaleMax,
       getSelectedTask: state => {
           if (state.selectedTaskUUID) {
               return state.tasks.find(element => element.uuid === state.selectedTaskUUID);
