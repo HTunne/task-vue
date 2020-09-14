@@ -1,9 +1,9 @@
 <template>
-    <v-list-item :value="task.uuid" three-line disable>
+    <v-list-item :value="task.uuid" three-line>
         <v-window v-model="showDonePrompt" style="width: 100%">
             <v-window-item :value="0">
-                <div style="{ flex-direction: row; display: flex; align-items: center;}" ref="taskdiv">
-                    <v-list-item-avatar :color="idAvatarColor">{{ task.id }}</v-list-item-avatar>
+                <div class="window-container">
+                    <v-list-item-avatar size="56" :color="idAvatarColor">{{ task.id }}</v-list-item-avatar>
                     <v-list-item-content>
                         <v-list-item-subtitle v-text="task.description">
                         </v-list-item-subtitle>
@@ -15,7 +15,7 @@
                                       rounded
                                       x-small
                                       depressed
-                                      style="margin: 0 5px 5px 0"
+                                      style="margin: 5px 5px 5px 0"
                                       color="primary"
                                       :key="tag"
                                       @click.stop="$emit('update:search', '+' + tag)"
@@ -24,38 +24,39 @@
                             </v-btn>
                         </v-item-group>
                     </v-list-item-content>
-                    <v-list-item-avatar class="urgency-avatar" v-text="task.urgency" :style="{ color: urgencyColor }"></v-list-item-avatar>
+                    <v-list-item-avatar size="56" v-text="task.urgency" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
                         <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="showDonePrompt = 1"><v-icon>mdi-check</v-icon></v-btn>
                     </v-list-item-action>
                 </div>
             </v-window-item>
             <v-window-item :value="1">
-                <div>
-
+                <div class="window-container">
                     <v-list-item-content>
                         <v-list-item-title>
                             Confirm Task {{ task.id }} Done?
                         </v-list-item-title>
-                        <v-item-group>
+                    </v-list-item-content>
+                    <v-list-item-action>
                             <v-btn
-                                small
+                                fab
                                 depressed
                                 color="success"
                                 style="margin: 0 5px 5px 0"
-                                @click.stop="showDonePrompt = 0">
-                                Confirm
+                                @click.stop="doneTask(task.uuid)">
+                                <v-icon>mdi-check</v-icon>
                             </v-btn>
+                    </v-list-item-action>
+                    <v-list-item-action>
                                 <v-btn
-                                    small
+                                    fab
                                     depressed
                                     color="error"
                                     style="margin: 0 5px 5px 0"
                                     @click.stop="showDonePrompt = 0">
-                                    Cancel
+                                <v-icon>mdi-close</v-icon>
                                 </v-btn>
-                        </v-item-group>
-                    </v-list-item-content>
+                    </v-list-item-action>
                 </div>
             </v-window-item>
         </v-window>
@@ -63,6 +64,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex"
 export default {
     name: 'taskItem',
     props: {
@@ -88,6 +90,7 @@ export default {
             return this.$refs.taskdiv.clientHeight;
         }
     },
+    methods: mapActions(['doneTask']),
     data () {
         return {
             showDonePrompt: 0,
@@ -105,6 +108,9 @@ export default {
     flex: 0 1 auto;
 }
 
-.urgency-avatar {
+.window-container {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
 }
 </style>

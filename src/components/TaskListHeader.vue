@@ -21,7 +21,7 @@
                 <v-icon v-if="showCompleted">mdi-eye-off-outline</v-icon>
                 <v-icon v-else>mdi-eye-outline</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn icon @click="fetchTaskList">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
             <v-btn icon :to="{ name: 'TaskAdd'}" @click="clearSelectedTaskUUID">
@@ -44,10 +44,13 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
     name: 'task-list-header',
     props: ['search', 'sortBy', 'showCompleted'],
     methods: {
+        ...mapActions(["fetchTaskList"]),
         updateSearch(value) {
             this.$emit('update:search', value);
         },

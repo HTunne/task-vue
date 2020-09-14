@@ -45,12 +45,18 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
-  name: 'App',
-
-  data: () => ({
-    //
-  }),
+    name: 'App',
+    methods: {
+        ...mapActions(["fetchTaskList"])
+    },
+    created() {
+        this.fetchTaskList();
+    },
+    data: () => ({
+        //
+    }),
 };
 </script>
 

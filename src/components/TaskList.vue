@@ -82,7 +82,10 @@ export default {
         customFilter(items, search) {
             items = items.filter(
                 item => {
-                    return !((!(this.showCompleted)) && (item.status === 'completed'))
+                    return !(
+                        (!(this.showCompleted))
+                        && (item.status === 'completed')
+                    )
                 }
             );
 
@@ -91,13 +94,22 @@ export default {
                 if (searchList[i].startsWith('+')) {
                     items = items.filter(
                         item => {
-                            return (('tags' in item) && (item.tags.includes(searchList[i].slice(1))))
+                            return (
+                                ('tags' in item)
+                                && (item.tags.includes(searchList[i].slice(1)))
+                            )
                         }
                     );
-                } else if ((searchList[i].startsWith('project:')) || (searchList[i].startsWith('p:'))) {
+                } else if (
+                    (searchList[i].startsWith('project:'))
+                    || (searchList[i].startsWith('p:'))
+                ) {
                     items = items.filter(
                         item => {
-                            return (('project' in item) && (item.project === searchList[i].split(':')[1]))
+                            return (
+                                ('project' in item)
+                                && (item.project === searchList[i].split(':')[1])
+                            )
                         }
                     );
                 }
@@ -137,6 +149,7 @@ export default {
     display: flex;
     flex-flow: column;
     height: 100%;
+    overflow: show;
 }
 
 .v-data-iterator > header {
