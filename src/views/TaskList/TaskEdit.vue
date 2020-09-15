@@ -102,6 +102,13 @@
                                 <v-spacer></v-spacer>
                                 <v-btn
                                     :disabled="editTask.notFound"
+                                    @click="deletePromptOverlay = true"
+                                    fab
+                                    color="error">
+                                    <v-icon>mdi-trash-can-outline</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    :disabled="editTask.notFound"
                                     @click="stopTask(editTask.uuid)"
                                     fab
                                     color="warning"
@@ -116,14 +123,6 @@
                                     v-else>
                                     <v-icon>mdi-play</v-icon>
                                 </v-btn>
-                                <v-btn
-                                    :disabled="editTask.notFound"
-                                    @click="deletePromptOverlay = true"
-                                    fab
-                                    color="error">
-                                    <v-icon>mdi-trash-can-outline</v-icon>
-                                </v-btn>
-
                                 <v-btn
                                     :disabled="editTask.notFound"
                                     @click="doneTask(editTask.uuid)"
