@@ -36,8 +36,7 @@ export default new Vuex.Store({
   actions: {
       async fetchTaskList({ commit }) {
           const response = await axios.get('http://127.0.0.1:5000/');
-          let tasks = response.data.pending.concat(response.data.completed);
-          commit('set_tasks', tasks);
+          commit('set_tasks', response.data);
       },
       async addTask({ dispatch }, newTask) {
           console.log(newTask);
