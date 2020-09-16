@@ -12,7 +12,7 @@
     <v-col cols=12 sm=5 lg=4 xl=3
       style="height: 100%"
     >
-      <taskList :tasks="tasks" type="pending"/>
+      <taskList :tasks="tasks" type="recurring"/>
     </v-col>
   </v-row>
   </v-container>
@@ -23,13 +23,13 @@
 import taskList from '@/components/TaskList.vue';
 
 export default {
-    name: 'TaskListView',
+    name: 'TaskRecurListView',
     components: {
         taskList,
     },
     computed: {
         tasks() {
-            return this.$store.getters.getTasks.filter((task) => ((task.status === 'completed') || (task.status === 'pending')));
+            return this.$store.getters.getTasks.filter((task) => task.status === 'recurring');
         }
     }
 }

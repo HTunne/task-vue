@@ -42,6 +42,10 @@ export default {
         taskItem,
         taskListHeader
     },
+    props: {
+        tasks: Array,
+        type: String
+    },
     computed: {
         selectedTaskUUID: {
             get: function () {
@@ -51,16 +55,13 @@ export default {
                 this.$store.commit('set_selected_task_uuid', newUUID);
             }
         },
-        tasks() {
-            return this.$store.getters.getTasks;
-        }
     },
     methods: {
         onSelectionChange(newUUID) {
             this.selectedTaskUUID = newUUID;
             if (this.selectedTaskUUID) {
                 let uuid = this.selectedTaskUUID;
-                this.$router.push({ name: 'TaskEdit', params: { uuid } })
+                this.$router.push({ name: 'TaskInfo', params: { uuid } })
             } else {
                 this.$router.push({ name: 'TaskNoneSelected' })
             }
@@ -84,7 +85,7 @@ export default {
                 item => {
                     return !(
                         (!(this.showCompleted))
-                        && (item.status !== 'pending')
+                        && (item.status === 'completed')
                     )
                 }
             );

@@ -26,7 +26,7 @@
                     </v-list-item-content>
                     <v-list-item-avatar size="56" v-text="task.urgency.toFixed(2)" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
-                        <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="windowIndex = 1"><v-icon>mdi-chevron-left</v-icon></v-btn>
+                        <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="windowIndexIncrement"><v-icon>mdi-chevron-left</v-icon></v-btn>
                     </v-list-item-action>
                 </div>
             </v-window-item>
@@ -142,7 +142,16 @@ export default {
             return this.$refs.taskdiv.clientHeight;
         }
     },
-    methods: mapActions(['doneTask', 'deleteTask', 'startTask', 'stopTask']),
+    methods: {
+        ...mapActions(['doneTask', 'deleteTask', 'startTask', 'stopTask']),
+        windowIndexIncrement () {
+            if (this.task.status === 'recurring') {
+                this.windowIndex = 2;
+            } else {
+                this.windowIndex = 1;
+            }
+        }
+    },
     data () {
         return {
             windowIndex: 0,

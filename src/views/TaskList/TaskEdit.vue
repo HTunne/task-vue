@@ -96,7 +96,7 @@
                                 </v-btn>
                                 <v-btn
                                     :disabled="editTask.notFound"
-                                    :to="{ name: 'TaskNoneSelected' }">
+                                    :to="{ name: 'TaskInfo' }">
                                     Cancel
                                 </v-btn>
                                 <v-spacer></v-spacer>
