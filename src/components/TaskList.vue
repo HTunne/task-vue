@@ -84,7 +84,7 @@ export default {
                 item => {
                     return !(
                         (!(this.showCompleted))
-                        && (item.status === 'completed')
+                        && (item.status !== 'pending')
                     )
                 }
             );
