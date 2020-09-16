@@ -85,20 +85,16 @@
             </v-window-item>
             <v-window-item :value="2">
                 <div class="window-container">
-                    <v-list-item-action>
-                        <v-btn
-                            depressed
-                            color="warning"
-                            @click.stop="windowIndex = 0"
-                            >
-                            Cancel
-                        </v-btn>
-                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            Are you sure?
+                        </v-list-item-title>
+                    </v-list-item-content>
                     <v-list-item-action>
                         <v-btn
                             depressed
                             color="error"
-                            @click.stop="deleteTask(editTask.uuid)"
+                            @click.stop="deleteTask(task.uuid)"
                             >
                             Delete
                         </v-btn>
@@ -146,7 +142,7 @@ export default {
             return this.$refs.taskdiv.clientHeight;
         }
     },
-    methods: mapActions(['doneTask']),
+    methods: mapActions(['doneTask', 'deleteTask', 'startTask', 'stopTask']),
     data () {
         return {
             windowIndex: 0,
