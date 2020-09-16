@@ -24,7 +24,7 @@
                             </v-btn>
                         </v-item-group>
                     </v-list-item-content>
-                    <v-list-item-avatar size="56" v-text="task.urgency" :style="{ color: urgencyColor }"></v-list-item-avatar>
+                    <v-list-item-avatar size="56" v-text="task.urgency.toFixed(2)" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
                         <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="windowIndex = 1"><v-icon>mdi-chevron-left</v-icon></v-btn>
                     </v-list-item-action>
@@ -120,6 +120,7 @@
 
 <script>
 import { mapActions } from "vuex"
+
 export default {
     name: 'taskItem',
     props: {
@@ -137,7 +138,7 @@ export default {
         },
         urgencyColor() {
             let val = 1 - (this.task.urgency/this.$store.getters.getUrgencyScaleMax)
-            val = val * (val > 0) * 120
+            val = Math.min(val * (val > 0) * 120, 120)
 
             return 'hsl(' + val + ',80%,50%)'
         },
