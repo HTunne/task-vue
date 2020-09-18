@@ -84,7 +84,6 @@ export default new Vuex.Store({
             }
             const response = await dispatch('handleRequest', axios_conf)
             if (response) {
-                console.log('set_tasks')
                 commit('set_tasks', response.data.tasks);
             }
         },
@@ -110,8 +109,8 @@ export default new Vuex.Store({
                 method: 'post',
                 data: newTask
             }
-            await dispatch('handleRequest', axios_conf);
-            await dispatch('fetchTaskList');
+            if(await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
         async updateTask({ dispatch }, updatedTask) {
             let axios_conf = {
@@ -119,37 +118,40 @@ export default new Vuex.Store({
                 data: updatedTask,
                 url: updatedTask.uuid
             }
-            await dispatch('handleRequest', axios_conf);
-            await dispatch('fetchTaskList');
+            if(await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
         async deleteTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'delete',
                 url: taskUUID
             }
-            dispatch('handleRequest', axios_conf);
-            await axios.delete(
-                `http://127.0.0.1:5000/${taskUUID}`
-            );
-            await dispatch('fetchTaskList');
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
         async doneTask({ dispatch }, taskUUID) {
-            await axios.put(
-                `http://127.0.0.1:5000/${taskUUID}/done`
-            );
-            await dispatch('fetchTaskList');
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/done'
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
         async startTask({ dispatch }, taskUUID) {
-            await axios.put(
-                `http://127.0.0.1:5000/${taskUUID}/start`
-            );
-            await dispatch('fetchTaskList');
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/start'
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
         async stopTask({ dispatch }, taskUUID) {
-            await axios.put(
-                `http://127.0.0.1:5000/${taskUUID}/stop`
-            );
-            await dispatch('fetchTaskList');
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/stop'
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
         },
     },
     modules: {
