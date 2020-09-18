@@ -5,9 +5,9 @@
                 <v-form :disabled="editTask.notFound">
                 <v-row>
                     <v-col>
-                        <h1 v-if="editTask.notFound">Task Not Found</h1>
+                        <h1 v-if="!editTask.uuid">Task Not Found</h1>
                         <h1 v-else>
-                            Edit Task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }}
+                            Edit Task {{ editTask.id > 0 ? editTask.id : editTask.uuid.slice(0,8) }}
                         </h1>
                     </v-col>
                     <v-col align-self="center" cols="2">
@@ -19,7 +19,12 @@
                             <v-text-field required clearable v-model="editTask.description" label="Desc: "></v-text-field>
                         </v-col>
                         <v-col cols="5">
-                            <v-text-field clearable v-model="editTask.project" label="Project: "></v-text-field>
+                            <v-text-field
+                                clearable
+                                @click:clear='editTask.project = ""'
+                                v-model="editTask.project"
+                                label="Project: ">
+                            </v-text-field>
                         </v-col>
                         <v-col cols="4">
                             <v-select
@@ -138,6 +143,7 @@
        </v-card>
                                  <v-overlay
                                     :value="deletePromptOverlay"
+                                    v-if="selectedTask.uuid"
                                     >
                                     <v-card light>
                                         <v-card-title v-if="!editTask.notFound">
@@ -205,13 +211,14 @@ export default {
             }
         },
         resetEditTask () {
+            console.log('reset edit task');
             this.editTask = {...this.selectedTask};
             if (this.selectedTask.tags) {
                 this.editTask.tags = this.selectedTask.tags.slice();
             }
         },
-        onUpdateTask () {
-            this.updateTask(this.editTask);
+        async onUpdateTask () {
+            await this.updateTask(this.editTask);
             this.resetEditTask();
         }
     },

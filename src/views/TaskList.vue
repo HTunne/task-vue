@@ -21,6 +21,7 @@
 <script>
 // @ is an alias to /src
 import taskList from '@/components/TaskList.vue';
+import { mapActions } from "vuex";
 
 export default {
     name: 'TaskListView',
@@ -31,6 +32,12 @@ export default {
         tasks() {
             return this.$store.getters.getTasks.filter((task) => ((task.status === 'completed') || (task.status === 'pending')));
         }
+    },
+    methods: {
+        ...mapActions(["fetchTaskList"])
+    },
+    created() {
+        this.fetchTaskList();
     }
 }
 </script>

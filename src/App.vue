@@ -52,7 +52,7 @@ export default {
         ...mapActions(["fetchTaskList"])
     },
     created() {
-        this.fetchTaskList();
+        //this.fetchTaskList();
     },
     data: () => ({
         //

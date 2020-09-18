@@ -1,26 +1,32 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import router from "../router/index.js"
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
         token: localStorage.token || null,
-        selectedTaskUUID: undefined,
+        apiBaseUrl: localStorage.apiBaseUrl || null,
+        tmpAxiosConf: null,
+        selectedTaskUUID: null,
         loadingTasks: true,
         taskFormView: undefined,
         urgencyScaleMax: 5,
         tasks: []
     },
     getters: {
+        getToken: state => state.token,
         getHasToken: state => !!state.token,
+        getBaseUrl: state => state.apiBaseUrl,
         getTasks: state => state.tasks ? state.tasks.slice() : [],
+        getTmpAxiosConf: state => state.tmpAxiosConf,
         getSelectedTaskUUID: state => state.selectedTaskUUID,
         getLoadingTasks: state => state.loadingTasks,
         getUrgencyScaleMax: state => state.urgencyScaleMax,
         getSelectedTask: state => {
-            if (state.selectedTaskUUID) {
+            if (state.selectedTaskUUID && state.tasks) {
                 return state.tasks.find(element => element.uuid === state.selectedTaskUUID);
             } else {
                 return {};
@@ -34,81 +40,115 @@ export default new Vuex.Store({
         set_tasks(state, tasks) {
             state.tasks = tasks;
         },
-        set_selected_task_uuid (state, newUUID) {
+        set_selected_task_uuid(state, newUUID) {
             state.selectedTaskUUID = newUUID;
+        },
+        set_tmp_axios_conf(state, tmpAxiosConf) {
+            state.tmpAxiosConf = tmpAxiosConf;
+        },
+        set_api_base_url(state, apiBaseUrl) {
+            state.apiBaseUrl = apiBaseUrl
         }
     },
     actions: {
-        async fetchToken({ commit }, { apiBase, pass }) {
-            let fetchSuccess
-            try {
-                const response = await axios.get(apiBase + '/auth', {
-                    auth: {
-                        password: pass
-                    }
-                });
-                await console.log(response);
-                localStorage.token = await response.data.token;
-                await commit('set_token', response.data.token);
-                fetchSuccess = true;
-            } catch (error) {
-                console.log('in catch');
-                fetchSuccess = false;
-            }
-            console.log('fetchSuccess ' + fetchSuccess);
-            return fetchSuccess
-        },
-        clearToken({ commit}) {
+        clearToken({ commit }) {
             localStorage.removeItem('token')
             commit('set_token', null);
         },
-        async fetchTaskList({ commit }) {
-            const response = await axios.get('http://127.0.0.1:5000/');
-            console.log(response);
-            commit('set_tasks', response.data.tasks);
+        async fetchToken({ dispatch, commit, getters }, { apiBaseUrl, pass }) {
+            localStorage.apiBaseUrl = apiBaseUrl;
+            commit('set_api_base_url', apiBaseUrl);
+            let axios_fetch_conf = {
+                method: 'get',
+                url: 'http://localhost:5000/auth',
+                auth: {
+                    password: pass
+                }
+            }
+            try {
+                const response = await axios(axios_fetch_conf);
+                // check if actually jwt
+                localStorage.token = response.data.token;
+                commit('set_token', response.data.token);
+                let tmpAxiosConf = getters.getTmpAxiosConf
+                if (tmpAxiosConf) {
+                    dispatch('handleRequest', tmpAxiosConf);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        async fetchTaskList({ dispatch, commit }) {
+            let axios_conf = {
+                method: 'get',
+            }
+            const response = await dispatch('handleRequest', axios_conf)
+            if (response) {
+                console.log('set_tasks')
+                commit('set_tasks', response.data.tasks);
+            }
+        },
+        async handleRequest({ dispatch, commit, getters }, axios_conf) {
+            commit('set_tmp_axios_conf', null);
+            axios_conf['baseURL'] = getters.getBaseUrl
+            axios_conf['headers'] = {
+                'x-access-tokens': getters.getToken
+            }
+            try {
+                const response = await axios(axios_conf);
+                commit('set_tasks', response.data.tasks);
+                return response
+            } catch (error) {
+                dispatch('clearToken');
+                commit('set_tmp_axios_conf', axios_conf);
+                router.push({ name: 'Login' })
+            }
+
         },
         async addTask({ dispatch }, newTask) {
-            const response = await axios.post(
-                'http://127.0.0.1:5000/',
-                newTask
-            );
-            console.log(response);
+            let axios_conf = {
+                method: 'post',
+                data: newTask
+            }
+            await dispatch('handleRequest', axios_conf);
             await dispatch('fetchTaskList');
         },
         async updateTask({ dispatch }, updatedTask) {
-            const response = await axios.put(
-                `http://127.0.0.1:5000/${updatedTask.uuid}`,
-                updatedTask
-            );
-            console.log(response);
+            let axios_conf = {
+                method: 'put',
+                data: updatedTask,
+                url: updatedTask.uuid
+            }
+            await dispatch('handleRequest', axios_conf);
             await dispatch('fetchTaskList');
         },
         async deleteTask({ dispatch }, taskUUID) {
-            const response = await axios.delete(
+            let axios_conf = {
+                method: 'delete',
+                url: taskUUID
+            }
+            dispatch('handleRequest', axios_conf);
+            await axios.delete(
                 `http://127.0.0.1:5000/${taskUUID}`
             );
-            console.log(response);
             await dispatch('fetchTaskList');
         },
         async doneTask({ dispatch }, taskUUID) {
-            const response = await axios.put(
+            await axios.put(
                 `http://127.0.0.1:5000/${taskUUID}/done`
             );
-            console.log(response);
             await dispatch('fetchTaskList');
         },
         async startTask({ dispatch }, taskUUID) {
-            const response = await axios.put(
+            await axios.put(
                 `http://127.0.0.1:5000/${taskUUID}/start`
             );
-            console.log(response);
             await dispatch('fetchTaskList');
         },
         async stopTask({ dispatch }, taskUUID) {
-            const response = await axios.put(
+            await axios.put(
                 `http://127.0.0.1:5000/${taskUUID}/stop`
             );
-            console.log(response);
             await dispatch('fetchTaskList');
         },
     },

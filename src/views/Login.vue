@@ -69,9 +69,10 @@ export default {
         ...mapActions(['fetchToken']),
         async onLogin () {
             this.loading = true;
-            let apiBase = this.apiBase;
+            let apiBaseUrl = this.apiBase;
             let pass = this.password;
-            await this.fetchToken({apiBase, pass});
+            console.log('apiBase in login: ', apiBaseUrl);
+            await this.fetchToken({apiBaseUrl, pass});
             if (this.getHasToken) {
                 this.$router.push({ name: 'TaskNoneSelected' })
             } else {
