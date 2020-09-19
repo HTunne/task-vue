@@ -10,8 +10,8 @@
                             Edit Task {{ editTask.id > 0 ? editTask.id : editTask.uuid.slice(0,8) }}
                         </h1>
                     </v-col>
-                    <v-col align-self="center" cols="2">
-                        <v-btn icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
+                    <v-col align-self="center" cols="1">
+                        <v-btn class="float-right pr-8" icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
                     </v-col>
                 </v-row>
                     <v-row>
@@ -141,30 +141,30 @@
                 </v-form>
             </v-container>
        </v-card>
-                                 <v-overlay
-                                    :value="deletePromptOverlay"
-                                    v-if="selectedTask.uuid"
-                                    >
-                                    <v-card light>
-                                        <v-card-title v-if="!editTask.notFound">
-                                            Delete task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }}
-                                        </v-card-title>
-                                        <v-card-actions>
-                                            <v-btn
-                                                color="warning"
-                                                @click="deletePromptOverlay = false"
-                                            >
-                                            Cancel
-                                            </v-btn>
-                                            <v-btn
-                                                color="error"
-                                                @click="deleteTask(editTask.uuid)"
-                                            >
-                                            Delete
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-overlay>
+       <v-overlay
+        :value="deletePromptOverlay"
+        v-if="selectedTask.uuid"
+        >
+        <v-card light>
+            <v-card-title v-if="!editTask.notFound">
+                Delete task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }}
+            </v-card-title>
+            <v-card-actions>
+                <v-btn
+                          color="warning"
+                          @click="deletePromptOverlay = false"
+                          >
+                          Cancel
+                </v-btn>
+                <v-btn
+                          color="error"
+                          @click="deleteTask(editTask.uuid)"
+                          >
+                          Delete
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+       </v-overlay>
     </v-container>
 
 </template>
