@@ -153,6 +153,42 @@ export default new Vuex.Store({
             if (await dispatch('handleRequest', axios_conf))
                 await dispatch('fetchTaskList');
         },
+        async addAnnotation({ dispatch }, { taskUUID, annotation }) {
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/add_annotation',
+                data: annotation
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
+        },
+        async removeAnnotation({ dispatch }, { taskUUID, annotation }) {
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/remove_annotation',
+                data: annotation
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
+        },
+        async addDependency({ dispatch }, { taskUUID, dependency }) {
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/add_dependency',
+                data: dependency
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
+        },
+        async removeDependency({ dispatch }, { taskUUID, dependency }) {
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/remove_dependency',
+                data: dependency
+            }
+            if (await dispatch('handleRequest', axios_conf))
+                await dispatch('fetchTaskList');
+        },
     },
     modules: {
     }
