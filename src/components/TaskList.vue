@@ -55,15 +55,20 @@ export default {
                 this.$store.commit('set_selected_task_uuid', newUUID);
             }
         },
+        recurPage() {
+            return this.$route.meta.recurPage
+        }
     },
     methods: {
         onSelectionChange(newUUID) {
             this.selectedTaskUUID = newUUID;
             if (this.selectedTaskUUID) {
                 let uuid = this.selectedTaskUUID;
-                this.$router.push({ name: 'TaskInfo', params: { uuid } })
+                if (this.recurPage) this.$router.push({ name: 'TaskRecurInfo', params: { uuid } })
+                else this.$router.push({ name: 'TaskInfo', params: { uuid } })
             } else {
-                this.$router.push({ name: 'TaskNoneSelected' })
+                if (this.recurPage) this.$router.push({ name: 'TaskRecurNoneSelected' })
+                else this.$router.push({ name: 'TaskNoneSelected' })
             }
         },
         customSort(items, sortBy) {

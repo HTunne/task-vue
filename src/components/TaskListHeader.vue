@@ -17,14 +17,14 @@
                 </v-btn>
             </v-btn-toggle>
             <v-spacer></v-spacer>
-            <v-btn icon @click="toggleShowCompleted">
+            <v-btn v-show="!recurPage" icon @click="toggleShowCompleted">
                 <v-icon v-if="showCompleted">mdi-eye-off-outline</v-icon>
                 <v-icon v-else>mdi-eye-outline</v-icon>
             </v-btn>
             <v-btn icon @click="fetchTaskList">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
-            <v-btn icon :to="{ name: 'TaskAdd'}" @click="clearSelectedTaskUUID">
+            <v-btn icon :retain-focus-on-click="false" @click="onAddTask">
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
         </template>
@@ -49,6 +49,11 @@ import { mapActions } from "vuex";
 export default {
     name: 'task-list-header',
     props: ['search', 'sortBy', 'showCompleted'],
+    computed: {
+        recurPage() {
+            return this.$route.meta.recurPage
+        }
+    },
     methods: {
         ...mapActions(["fetchTaskList"]),
         updateSearch(value) {
@@ -63,6 +68,11 @@ export default {
         },
         clearSelectedTaskUUID() {
             this.$store.commit('set_selected_task_uuid', undefined);
+        },
+        onAddTask() {
+            this.clearSelectedTaskUUID();
+            if (this.recurPage) this.$router.push({ name: 'TaskRecurAdd' });
+            else this.$router.push({ name: 'TaskAdd'});
         }
     }
 }

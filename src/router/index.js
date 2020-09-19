@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import store from "../store/index.js";
 import LoginView from '../views/Login.vue'
 import TaskListView from '../views/TaskList.vue'
-import TaskRecurListView from '../views/TaskRecurList.vue'
 import TaskNoneSelected from '../views/TaskList/TaskNoneSelected.vue'
 import TaskAdd from '../views/TaskList/TaskAdd.vue'
 import TaskInfo from '../views/TaskList/TaskInfo.vue'
@@ -16,29 +15,27 @@ const routes = [
         path: '/login',
         name: 'Login',
         component: LoginView,
-        beforeEnter: (to, from, next) => {
-            if(store.getters.getHasToken) next({ name: 'TaskNoneSelected' })
-            else next()
-        }
     },
     {
         path: '/',
         component: TaskListView,
+        meta: { recurPage: false },
         children: [
-            { path: '', name: 'TaskNoneSelected', component: TaskNoneSelected },
-            { path: 'add', name: 'TaskAdd', component: TaskAdd },
-            { path: 'info/:uuid', name: 'TaskInfo', component: TaskInfo },
-            { path: 'edit/:uuid', name: 'TaskEdit', component: TaskEdit }
+            { path: '', name: 'TaskNoneSelected', component: TaskNoneSelected, meta: { recurPage: false } },
+            { path: 'add', name: 'TaskAdd', component: TaskAdd, meta: { recurPage: false } },
+            { path: 'info/:uuid', name: 'TaskInfo', component: TaskInfo, meta: { recurPage: false } },
+            { path: 'edit/:uuid', name: 'TaskEdit', component: TaskEdit, meta: { recurPage: false } }
         ]
     },
     {
         path: '/recur',
-        component: TaskRecurListView,
+        component: TaskListView,
+        meta: { recurPage: true },
         children: [
-            { path: '', name: 'TaskRecurNoneSelected', component: TaskNoneSelected },
-            { path: 'add', name: 'TaskRecurAdd', component: TaskAdd },
-            { path: ':uuid', name: 'TaskRecurInfo', component: TaskInfo },
-            { path: 'edit/:uuid', name: 'TaskRecurEdit', component: TaskEdit }
+            { path: '', name: 'TaskRecurNoneSelected', component: TaskNoneSelected, meta: { recurPage: true } },
+            { path: 'add', name: 'TaskRecurAdd', component: TaskAdd, meta: { recurPage: true } },
+            { path: ':uuid', name: 'TaskRecurInfo', component: TaskInfo, meta: { recurPage: true } },
+            { path: 'edit/:uuid', name: 'TaskRecurEdit', component: TaskEdit, meta: { recurPage: true } }
         ]
     },
     {
@@ -58,8 +55,11 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !store.getters.getHasToken) next({ name: 'Login' })
-  else next()
+  if (to.name !== 'Login' && !store.getters.getHasToken) {
+      const loginpath = window.location.pathname;
+      console.log(loginpath)
+      next({ name: 'Login', query: { from: loginpath } });
+  } else next()
 })
 
 export default router

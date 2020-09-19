@@ -25,16 +25,22 @@
                  width="100"
                  />
             </div>
+            <v-btn link @click="onBtn" text>
+                Task List
+            </v-btn>
+            <v-btn link @click="onRecurBtn" text>
+                Recurring Tasks
+            </v-btn>
 
             <v-spacer></v-spacer>
 
             <v-btn
-                 href="https://github.com/vuetifyjs/vuetify/releases/latest"
-                 target="_blank"
+                 :retain-focus-on-click="false"
+                 link
+                 @click="onLogOut"
                  text
                  >
-                 <span class="mr-2">Latest Release</span>
-                 <v-icon>mdi-open-in-new</v-icon>
+                 <span class="mr-2">Log out</span>
             </v-btn>
         </v-app-bar>
         <v-main style="height: 100vh">
@@ -47,8 +53,23 @@
 import { mapActions } from "vuex";
 export default {
     name: 'App',
+    computed: {
+        recurPage() {
+            return this.$route.meta.recurPage
+        }
+    },
     methods: {
-        ...mapActions(["fetchTaskList"])
+        ...mapActions(["fetchTaskList", "clearToken"]),
+        onLogOut () {
+            this.clearToken();
+            this.$router.push({ name: 'Login' })
+        },
+        onRecurBtn () {
+            if (!this.recurPage) this.$router.push({ name: 'TaskRecurNoneSelected' });
+        },
+        onBtn () {
+            if (this.recurPage) this.$router.push({ name: 'TaskNoneSelected' });
+        },
     },
     created() {
         //this.fetchTaskList();

@@ -73,15 +73,16 @@ export default {
             let pass = this.password;
             await this.fetchToken({apiBaseUrl, pass});
             if (this.getHasToken) {
-                if (this.hasHistory()) this.$router.push(-1)
-                else this.$router.push({ name: 'TaskNoneSelected' })
+                this.$router.replace(this.$route.query.from || '/');
             } else {
                 this.loading = false;
                 this.error = true;
             }
-        },
-        methods: {
-            hasHistory () { return window.history.length > 2 }
+        }
+    },
+    created: function () {
+        if (this.getHasToken) {
+            this.$router.replace({ name: 'TaskNoneSelected' });
         }
     }
 }

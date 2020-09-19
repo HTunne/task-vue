@@ -30,7 +30,14 @@ export default {
     },
     computed: {
         tasks() {
-            return this.$store.getters.getTasks.filter((task) => ((task.status === 'completed') || (task.status === 'pending')));
+            if (this.recurPage) {
+                return this.$store.getters.getTasks.filter((task) => (task.status === 'recurring'));
+            } else {
+                return this.$store.getters.getTasks.filter((task) => ((task.status === 'completed') || (task.status === 'pending')));
+            }
+        },
+        recurPage() {
+            return this.$route.meta.recurPage
         }
     },
     methods: {

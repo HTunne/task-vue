@@ -5,8 +5,8 @@
             <v-window-item :value="0">
                 <div class="window-container">
                     <v-list-item-content>
-                        <v-list-item-subtitle v-text="task.description">
-                        </v-list-item-subtitle>
+                        <span class="text-body-2" v-text="task.description">
+                        </span>
                         <v-btn depressed small outlined left color="primary" v-if="'project' in task" v-text="task.project" class="project-btn text-none font-weight-bold" @click.stop="$emit('update:search', 'p:' + task.project)">
                         </v-btn>
                         <v-item-group v-if="'tags' in task">
