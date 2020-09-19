@@ -71,14 +71,17 @@ export default {
             this.loading = true;
             let apiBaseUrl = this.apiBase;
             let pass = this.password;
-            console.log('apiBase in login: ', apiBaseUrl);
             await this.fetchToken({apiBaseUrl, pass});
             if (this.getHasToken) {
-                this.$router.push({ name: 'TaskNoneSelected' })
+                if (this.hasHistory()) this.$router.push(-1)
+                else this.$router.push({ name: 'TaskNoneSelected' })
             } else {
                 this.loading = false;
                 this.error = true;
             }
+        },
+        methods: {
+            hasHistory () { return window.history.length > 2 }
         }
     }
 }
