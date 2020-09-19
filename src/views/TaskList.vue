@@ -6,7 +6,7 @@
   <v-row no-gutters
     style="height: 100%"
   >
-    <v-col>
+    <v-col class="main-col">
       <router-view></router-view>
     </v-col>
     <v-col cols=12 sm=5 lg=4 xl=3
@@ -41,3 +41,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.main-col {
+    overflow-y: scroll;
+    height: 100%;
+}
+</style>
