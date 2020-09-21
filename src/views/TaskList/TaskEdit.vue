@@ -11,7 +11,7 @@
                         </h1>
                     </v-col>
                     <v-col align-self="center" cols="1">
-                        <v-btn class="float-right pr-8" icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
+                        <v-btn class="float-right mr-8" icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
                     </v-col>
                 </v-row>
                     <v-row>
@@ -68,11 +68,11 @@
                         <v-col cols="12">
                             <date-time-menu title="Due" :dateTimeString.sync="editTask.due"/>
                         </v-col>
-                        <v-spacer></v-spacer>
                         <v-col>
                             <v-btn
                                 icon
                                 @click="showExtra = !showExtra"
+                                class="float-right mr-4"
                             >
                                 <v-icon>{{ showExtra ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                             </v-btn>
