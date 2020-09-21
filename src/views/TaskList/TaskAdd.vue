@@ -15,6 +15,14 @@
                         <v-col cols="12">
                             <v-text-field required clearable v-model="newTask.description" label="Desc: "></v-text-field>
                         </v-col>
+                        <template v-if="recurPage">
+                            <v-col cols="12">
+                                <v-text-field required clearable v-model="newTask.recur" label="Recur every: "></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <date-time-menu title="Due" :dateTimeString.sync="newTask.due"/>
+                            </v-col>
+                        </template>
                         <v-col cols="5">
                             <v-text-field clearable v-model="newTask.project" label="Project: "></v-text-field>
                         </v-col>
@@ -113,6 +121,11 @@ export default {
             newTask: {},
             tagField: undefined,
             showExtra: false
+        }
+    },
+    computed: {
+        recurPage() {
+            return this.$route.meta.recurPage
         }
     },
     methods: {
