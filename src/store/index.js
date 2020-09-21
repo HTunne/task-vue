@@ -14,13 +14,15 @@ export default new Vuex.Store({
         loadingTasks: true,
         taskFormView: undefined,
         urgencyScaleMax: 5,
-        tasks: []
+        tasks: [],
+        alerts: []
     },
     getters: {
         getToken: state => state.token,
         getHasToken: state => !!state.token,
         getBaseUrl: state => state.apiBaseUrl,
         getTasks: state => state.tasks ? state.tasks.slice() : [],
+        getAlerts: state => state.alerts,
         getTmpAxiosConf: state => state.tmpAxiosConf,
         getSelectedTaskUUID: state => state.selectedTaskUUID,
         getLoadingTasks: state => state.loadingTasks,
@@ -47,7 +49,13 @@ export default new Vuex.Store({
             state.tmpAxiosConf = tmpAxiosConf;
         },
         set_api_base_url(state, apiBaseUrl) {
-            state.apiBaseUrl = apiBaseUrl
+            state.apiBaseUrl = apiBaseUrl;
+        },
+        push_alert(state, alert_obj) {
+            if (alert_obj) state.alerts.push(alert_obj);
+        },
+        clear_alerts(state) {
+            state.alerts = []
         }
     },
     actions: {
@@ -94,9 +102,7 @@ export default new Vuex.Store({
                 'x-access-tokens': getters.getToken
             }
             try {
-                const response = await axios(axios_conf);
-                commit('set_tasks', response.data.tasks);
-                return response
+                return await axios(axios_conf);
             } catch (error) {
                 dispatch('clearToken');
                 commit('set_tmp_axios_conf', axios_conf);
@@ -104,54 +110,87 @@ export default new Vuex.Store({
             }
 
         },
-        async addTask({ dispatch }, newTask) {
+        handleRedirectToInfo(context, response) {
+            if ((response.data.message &&
+                (response.data.message.type !== "error") &&
+                response.data.task.uuid)) {
+                let uuid = response.data.task.uuid;
+                if (response.data.task.status === 'recurring') {
+                    router.push({ name: 'TaskRecurInfo', params: { uuid } });
+                } else {
+                    router.push({ name: 'TaskInfo', params: { uuid } });
+                }
+            }
+        },
+        async addTask({ commit, dispatch }, newTask) {
             let axios_conf = {
                 method: 'post',
                 data: newTask
             }
-            if(await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                dispatch('handleRedirectToInfo', response)
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
-        async updateTask({ dispatch }, updatedTask) {
+        async updateTask({ commit, dispatch }, updatedTask) {
             let axios_conf = {
                 method: 'put',
                 data: updatedTask,
                 url: updatedTask.uuid
             }
-            if(await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                dispatch('handleRedirectToInfo', response)
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
-        async deleteTask({ dispatch }, taskUUID) {
+        async deleteTask({ commit, dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'delete',
                 url: taskUUID
             }
-            if (await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                dispatch('handleRedirectToInfo', response)
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
-        async doneTask({ dispatch }, taskUUID) {
+        async doneTask({ commit, dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/done'
             }
-            if (await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
-        async startTask({ dispatch }, taskUUID) {
+        async startTask({ commit, dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/start'
             }
-            if (await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
-        async stopTask({ dispatch }, taskUUID) {
+        async stopTask({ commit, dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/stop'
             }
-            if (await dispatch('handleRequest', axios_conf))
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                commit('push_alert', response.data.message)
                 await dispatch('fetchTaskList');
+            }
         },
         async addAnnotation({ dispatch }, { taskUUID, annotation }) {
             let axios_conf = {

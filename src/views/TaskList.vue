@@ -7,6 +7,11 @@
     style="height: 100%"
   >
     <v-col class="main-col">
+      <div>
+          <v-alert text dismissible :type="alert.type" v-for="alert in alerts" :key="alert.message">
+              {{ alert.description }}
+          </v-alert>
+      </div>
       <router-view></router-view>
     </v-col>
     <v-col cols=12 sm=5 lg=4 xl=3
@@ -33,8 +38,11 @@ export default {
             if (this.recurPage) {
                 return this.$store.getters.getTasks.filter((task) => (task.status === 'recurring'));
             } else {
-                return this.$store.getters.getTasks.filter((task) => ((task.status === 'completed') || (task.status === 'pending')));
+                return this.$store.getters.getTasks.filter((task) => ((task.status !== 'recurring') && (task.status !== 'deleted')));
             }
+        },
+        alerts() {
+            return this.$store.getters.getAlerts
         },
         recurPage() {
             return this.$route.meta.recurPage
