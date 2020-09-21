@@ -1,6 +1,6 @@
 <template>
     <v-list-item :value="task.uuid" three-line>
-                    <v-list-item-avatar size="56" :color="idAvatarColor">{{ task.id }}</v-list-item-avatar>
+                    <v-list-item-avatar size="56" class="white--text" :color="idAvatarColor">{{ task.id }}</v-list-item-avatar>
         <v-window v-model="windowIndex" style="width: 100%">
             <v-window-item :value="0">
                 <div class="window-container">
@@ -124,7 +124,9 @@ export default {
     },
     computed: {
         idAvatarColor() {
-            if (this.task.status == 'completed') {
+            if (this.task.status == 'waiting') {
+                return "info";
+            } else if (this.task.status == 'completed') {
                 return "error";
             } else if (this.task.start) {
                 return "success";
