@@ -18,7 +18,7 @@
                         </span>
                     </v-col>
                     <v-col align-self="center" cols="1">
-                        <v-btn class="float-right pr-8" icon @click="editSelectedTask"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
+                        <v-btn class="float-right mr-8" icon @click="editSelectedTask"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
                     </v-col>
                 </v-row>
                 <template v-if="selectedTask.uuid">
@@ -27,13 +27,28 @@
                             <span class="text-h4">{{ selectedTask.description }}</span>
                         </v-col>
                         <v-col cols="12" v-if="selectedTask.project">
-                            <v-chip large label outlined color="primary">{{ selectedTask.project }} </v-chip>
+                            <span class="text-h6">Project: </span><v-chip large label outlined color="primary">{{ selectedTask.project }} </v-chip>
                         </v-col>
                         <v-col cols="6">
-                            <h3> Status: {{ selectedTask.status }} </h3>
+                            <span class="text-h6">Status: </span><span class="text-h6 font-weight-light">{{ selectedTask.status }} </span>
                         </v-col>
                         <v-col cols="6">
-                            <h3> Urgency: {{ selectedTask.urgency.toFixed(2) }}</h3>
+                            <span class="text-h6">Urgency: </span><span class="text-h6 font-weight-light">{{ selectedTask.urgency.toFixed(2) }}</span>
+                        </v-col>
+                        <v-col cols="6" v-if="selectedTask.due">
+                            <span class="text-h6">Due: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.due) }}</span>
+                        </v-col>
+                        <v-col cols="6" v-if="selectedTask.scheduled">
+                            <span class="text-h6">Scheduled: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.until) }}</span>
+                        </v-col>
+                        <v-col cols="6" v-if="selectedTask.until">
+                            <span class="text-h6">Keep until: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.until) }}</span>
+                        </v-col>
+                        <v-col cols="6" v-if="selectedTask.recur">
+                            <span class="text-h6">Recur every: </span><span class="text-h6 font-weight-light">{{ selectedTask.recur }}</span>
+                        </v-col>
+                        <v-col cols="6" v-if="selectedTask.parent">
+                            <span class="text-h6">Parent task: </span><span class="text-h6 font-weight-light">{{ selectedTask.parent.id }}</span>
                         </v-col>
                     </v-row>
                     <v-row v-if="selectedTask.tags">
@@ -57,6 +72,7 @@
                     <v-row>
                         <v-col>
                             <v-btn
+                                class="float-right mr-4"
                                 icon
                                 @click="showExtra = !showExtra"
                             >
@@ -201,6 +217,48 @@
                         </v-col>
                     </v-row>
                     </v-expand-transition>
+                    <v-row>
+                        <v-col cols="6" class="align-self-center" v-if="selectedTask.start">
+                            <span class="text-h6">Started: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.start) }}</span>
+                        </v-col>
+                        <v-spacer></v-spacer>
+                        <v-col cols="6">
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn
+                                    :disabled="selectedTask.notFound"
+                                    @click="deletePromptOverlay = true"
+                                    fab
+                                    color="error">
+                                    <v-icon>mdi-trash-can-outline</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    :disabled="selectedTask.notFound"
+                                    @click="stopTask(selectedTask.uuid)"
+                                    fab
+                                    color="warning"
+                                    v-if="selectedTask.start">
+                                    <v-icon> mdi-stop</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    :disabled="selectedTask.notFound"
+                                    @click="startTask(selectedTask.uuid)"
+                                    fab
+                                    color="info"
+                                    v-else>
+                                    <v-icon>mdi-play</v-icon>
+                                </v-btn>
+                                <v-btn
+                                    :disabled="selectedTask.notFound"
+                                    @click="doneTask(selectedTask.uuid)"
+                                    fab
+                                    color="success">
+                                    <v-icon>mdi-check</v-icon>
+                                </v-btn>
+                            </v-card-actions>
+                        </v-col>
+                    </v-row>
+
                 </template>
             </v-container>
         </v-card>
@@ -233,6 +291,7 @@ export default {
         },
     },
     methods: {
+        ...mapActions([]),
         editSelectedTask () {
             if (this.selectedTask.uuid) {
                 let uuid = this.selectedTask.uuid;
@@ -271,9 +330,8 @@ export default {
             this.loading = false;
         },
         formatDateTimeString (dateTimeString) {
-            let yesterday = new Date(Date.now() - (24*60*60*1000));
             let date = new Date(dateTimeString);
-            if (date < yesterday) {
+            if (Math.abs(date - Date.now()) > (24*60*60*1000)) {
                 return this.toDate(date);
             } else {
                 return this.toTime(date);
@@ -288,9 +346,16 @@ export default {
         toTime (date) {
             return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' });
         },
-        ...mapActions(
-            ['addAnnotation','removeAnnotation','addDependency','removeDependency']
-        )
+        ...mapActions([
+            'doneTask',
+            'startTask',
+            'stopTask',
+            'deleteTask',
+            'addAnnotation',
+            'removeAnnotation',
+            'addDependency',
+            'removeDependency'
+        ])
     },
     created: function () {
         this.$store.commit('set_selected_task_uuid', this.$route.params.uuid)
