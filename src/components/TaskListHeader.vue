@@ -17,8 +17,8 @@
                 </v-btn>
             </v-btn-toggle>
             <v-spacer></v-spacer>
-            <v-btn v-show="!recurPage" icon @click="toggleShowCompleted">
-                <v-icon v-if="showCompleted">mdi-eye-off-outline</v-icon>
+            <v-btn v-show="!recurPage" icon @click="toggleShowHidden">
+                <v-icon v-if="showHidden">mdi-eye-off-outline</v-icon>
                 <v-icon v-else>mdi-eye-outline</v-icon>
             </v-btn>
             <v-btn icon @click="fetchTaskList">
@@ -48,7 +48,7 @@ import { mapActions } from "vuex";
 
 export default {
     name: 'task-list-header',
-    props: ['search', 'sortBy', 'showCompleted'],
+    props: ['search', 'sortBy', 'showHidden'],
     computed: {
         recurPage() {
             return this.$route.meta.recurPage
@@ -62,9 +62,9 @@ export default {
         updateSortBy(value) {
             this.$emit('update:sortBy', value);
         },
-        toggleShowCompleted() {
+        toggleShowHidden() {
             console.log('toggle');
-            this.$emit('update:showCompleted', !(this.showCompleted));
+            this.$emit('update:showHidden', !(this.showHidden));
         },
         clearSelectedTaskUUID() {
             this.$store.commit('set_selected_task_uuid', undefined);

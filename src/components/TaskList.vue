@@ -15,7 +15,7 @@
         disable-pagination
         hide-default-footer>
             <template v-slot:header>
-                <task-list-header :search.sync="search" :sortBy.sync="sortBy" :showCompleted.sync="showCompleted"/>
+                <task-list-header :search.sync="search" :sortBy.sync="sortBy" :showHidden.sync="showHidden"/>
             </template>
 
             <template v-slot:default="props">
@@ -89,8 +89,9 @@ export default {
             items = items.filter(
                 item => {
                     return !(
-                        (!(this.showCompleted))
-                        && (item.status === 'completed')
+                        (!(this.showHidden))
+                        && (item.status !== 'pending')
+                        && (!this.recurPage)
                     )
                 }
             );
@@ -139,7 +140,7 @@ export default {
     },
     data() {
         return {
-            showCompleted: false,
+            showHidden: false,
             sortBy: 'urgency',
             search: '',
         }
