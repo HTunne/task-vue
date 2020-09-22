@@ -51,7 +51,7 @@
 
 <script>
 export default {
-    name: "date-time-menu",
+    name: "dateTimeMenu",
     props: ['title', 'dateTimeString'],
     data () {
         return {
