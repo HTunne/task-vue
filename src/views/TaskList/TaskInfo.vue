@@ -12,7 +12,7 @@
             <v-container>
                 <v-row>
                     <v-col>
-                        <h1 v-if="!selectedTask.uuid">Task Not Found</h1>
+                        <span class="text-h3" v-if="!selectedTask.uuid">Task Not Found</span>
                         <span class="text-h3" v-else>
                             Task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }} Info
                         </span>
