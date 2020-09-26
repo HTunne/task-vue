@@ -92,6 +92,7 @@ export default new Vuex.Store({
             }
             const response = await dispatch('handleRequest', axios_conf)
             if (response) {
+                commit('push_alert', response.data.message);
                 commit('set_tasks', response.data.tasks);
             }
         },
