@@ -68,7 +68,7 @@ export default new Vuex.Store({
             commit('set_api_base_url', apiBaseUrl);
             let axios_fetch_conf = {
                 method: 'get',
-                url: 'http://localhost:5000/auth',
+                url: apiBaseUrl + '/auth',
                 auth: {
                     password: pass
                 }
