@@ -87,6 +87,7 @@ export default new Vuex.Store({
             }
         },
         async fetchTaskList({ dispatch, commit }) {
+            await dispatch('syncTaskList');
             let axios_conf = {
                 method: 'get',
             }
@@ -94,6 +95,16 @@ export default new Vuex.Store({
             if (response) {
                 commit('push_alert', response.data.message);
                 commit('set_tasks', response.data.tasks);
+            }
+        },
+        async syncTaskList({ dispatch, commit }) {
+            let axios_conf = {
+                method: 'get',
+                url: 'sync'
+            }
+            const response = await dispatch('handleRequest', axios_conf)
+            if (response) {
+                commit('push_alert', response.data.message);
             }
         },
         async handleRequest({ dispatch, commit, getters }, axios_conf) {
