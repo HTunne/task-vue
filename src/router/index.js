@@ -21,7 +21,7 @@ const routes = [
         component: TaskListView,
         meta: { recurPage: false },
         children: [
-            { path: '', name: 'TaskNoneSelected', component: TaskNoneSelected, meta: { recurPage: false } },
+            { path: '', name: 'TaskNoneSelected', component: TaskNoneSelected, meta: { recurPage: false, noneSelected: true } },
             { path: 'add', name: 'TaskAdd', component: TaskAdd, meta: { recurPage: false } },
             { path: 'info/:uuid', name: 'TaskInfo', component: TaskInfo, meta: { recurPage: false } },
             { path: 'edit/:uuid', name: 'TaskEdit', component: TaskEdit, meta: { recurPage: false } }
@@ -32,7 +32,7 @@ const routes = [
         component: TaskListView,
         meta: { recurPage: true },
         children: [
-            { path: '', name: 'TaskRecurNoneSelected', component: TaskNoneSelected, meta: { recurPage: true } },
+            { path: '', name: 'TaskRecurNoneSelected', component: TaskNoneSelected, meta: { recurPage: true, noneSelected: true } },
             { path: 'add', name: 'TaskRecurAdd', component: TaskAdd, meta: { recurPage: true } },
             { path: ':uuid', name: 'TaskRecurInfo', component: TaskInfo, meta: { recurPage: true } },
             { path: 'edit/:uuid', name: 'TaskRecurEdit', component: TaskEdit, meta: { recurPage: true } }
