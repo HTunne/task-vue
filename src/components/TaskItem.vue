@@ -16,7 +16,7 @@
                                       x-small
                                       depressed
                                       style="margin: 5px 5px 5px 0"
-                                      color="primary"
+                                      color="accent"
                                       :key="tag"
                                       @click.stop="$emit('update:search', '+' + tag)"
                                       class="text-none">
@@ -24,7 +24,7 @@
                             </v-btn>
                         </v-item-group>
                     </v-list-item-content>
-                    <v-list-item-avatar size="56" v-text="task.urgency.toFixed(2)" :style="{ color: urgencyColor }"></v-list-item-avatar>
+                    <v-list-item-avatar size="56" class="font-weight-bold" v-text="task.urgency.toFixed(2)" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
                         <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="windowIndexIncrement"><v-icon>mdi-chevron-left</v-icon></v-btn>
                     </v-list-item-action>
@@ -131,7 +131,7 @@ export default {
             } else if (this.task.start) {
                 return "success";
             } else {
-                return "grey";
+                return "secondary";
             }
         },
         urgencyColor() {
