@@ -32,75 +32,31 @@
                         </v-card-actions>
                     </v-col>
                     <v-col cols="12" md="6">
-                        <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                                :disabled="editTask.notFound"
-                                @click="deletePromptOverlay = true"
-                               fab
-                               color="error">
-                                <v-icon>mdi-trash-can-outline</v-icon>
-                            </v-btn>
-                            <v-btn
-                                :disabled="editTask.notFound"
-                                @click="stopTask(editTask.uuid)"
-                                fab
-                                color="warning"
-                                v-if="selectedTask.start">
-                                <v-icon> mdi-stop</v-icon>
-                            </v-btn>
-                            <v-btn
-                                :disabled="editTask.notFound"
-                                @click="startTask(editTask.uuid)"
-                                fab
-                                color="info"
-                                v-else>
-                                <v-icon>mdi-play</v-icon>
-                            </v-btn>
-                            <v-btn
-                                :disabled="editTask.notFound"
-                                @click="doneTask(editTask.uuid)"
-                                fab
-                                color="success">
-                                <v-icon>mdi-check</v-icon>
-                            </v-btn>
-                        </v-card-actions>
+                        <task-options
+                            :disabled="!!editTask.notFound"
+                            :completed="editTask.status === 'completed'"
+                            :started="!!editTask.start"
+                            :id="editTask.id"
+                            :uuid="editTask.uuid"
+                            >
+                        </task-options>
                     </v-col>
                 </v-row>
             </v-container>
         </v-card>
-        <v-overlay
-            :value="deletePromptOverlay"
-            v-if="selectedTask.uuid">
-            <v-card light>
-                <v-card-title v-if="!editTask.notFound">
-                    Delete task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }}
-                </v-card-title>
-                <v-card-actions>
-                    <v-btn
-                              color="warning"
-                              @click="deletePromptOverlay = false">
-                        Cancel
-                    </v-btn>
-                    <v-btn
-                              color="error"
-                              @click="deleteTask(editTask.uuid)">
-                        Delete
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-overlay>
     </v-container>
 </template>
 
 <script>
 import { mapActions } from "vuex";
 import taskForm from '@/components/TaskForm.vue';
+import taskOptions from '@/components/TaskOptions.vue';
 
 export default {
     name: 'taskEdit',
     components: {
-        taskForm
+        taskForm,
+        taskOptions
     },
     data() {
         return {
@@ -117,7 +73,7 @@ export default {
         },
     },
     methods: {
-        ...mapActions(['updateTask', 'deleteTask', 'doneTask', 'startTask', 'stopTask']),
+        ...mapActions(['updateTask', 'deleteTask']),
         resetEditTask () {
             this.editTask = {...this.selectedTask};
             if (this.selectedTask.tags) {

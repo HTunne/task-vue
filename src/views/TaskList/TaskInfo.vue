@@ -214,6 +214,14 @@
                             <span class="text-h6">Started: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.start) }}</span>
                         </v-col>
                         <v-col cols="12">
+                            <task-options
+                               :disabled="!!selectedTask.notFound"
+                               :completed="selectedTask.status === 'completed'"
+                               :started="!!selectedTask.start"
+                               :id="selectedTask.id"
+                               :uuid="selectedTask.uuid"
+                               >
+                            </task-options>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn
@@ -258,10 +266,14 @@
 
 
 <script>
+import taskOptions from '@/components/TaskOptions.vue';
 import { mapActions } from "vuex"
 
 export default {
     name: 'taskInfo',
+    components: {
+        taskOptions
+    },
     data () {
         return {
             annotationTextBox: '',
