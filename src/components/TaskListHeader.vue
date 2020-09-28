@@ -1,5 +1,5 @@
 <template>
-    <v-toolbar  dark color="grey" flat extension-height="57px">
+    <v-toolbar  dark color="secondary" flat extension-height="57px">
         <template v-slot:extension>
             <v-btn-toggle
                 :value="sortBy"
