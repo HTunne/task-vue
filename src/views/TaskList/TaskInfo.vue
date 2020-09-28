@@ -222,39 +222,6 @@
                                :uuid="selectedTask.uuid"
                                >
                             </task-options>
-                            <v-card-actions>
-                                <v-spacer></v-spacer>
-                                <v-btn
-                                    :disabled="selectedTask.notFound"
-                                    @click="deletePromptOverlay = true"
-                                    fab
-                                    color="error">
-                                    <v-icon>mdi-trash-can-outline</v-icon>
-                                </v-btn>
-                                <v-btn
-                                    :disabled="selectedTask.notFound"
-                                    @click="stopTask(selectedTask.uuid)"
-                                    fab
-                                    color="warning"
-                                    v-if="selectedTask.start">
-                                    <v-icon> mdi-stop</v-icon>
-                                </v-btn>
-                                <v-btn
-                                    :disabled="selectedTask.notFound"
-                                    @click="startTask(selectedTask.uuid)"
-                                    fab
-                                    color="info"
-                                    v-else>
-                                    <v-icon>mdi-play</v-icon>
-                                </v-btn>
-                                <v-btn
-                                    :disabled="selectedTask.notFound"
-                                    @click="doneTask(selectedTask.uuid)"
-                                    fab
-                                    color="success">
-                                    <v-icon>mdi-check</v-icon>
-                                </v-btn>
-                            </v-card-actions>
                         </v-col>
                     </v-row>
 
@@ -341,10 +308,6 @@ export default {
             return date.toLocaleTimeString([], { hour12: false, hour: '2-digit', minute: '2-digit' });
         },
         ...mapActions([
-            'doneTask',
-            'startTask',
-            'stopTask',
-            'deleteTask',
             'addAnnotation',
             'removeAnnotation',
             'addDependency',
