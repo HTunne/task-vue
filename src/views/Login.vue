@@ -51,7 +51,7 @@ export default {
     name: 'Login',
     data() {
         return {
-            apiBase: '',
+            apiBase: this.getBaseUrl,
             password: '',
             show: false,
             loading: false,
@@ -63,7 +63,7 @@ export default {
 
     },
     computed: {
-        ...mapGetters(['getHasToken'])
+        ...mapGetters(['getHasToken', 'getBaseUrl'])
     },
     methods: {
         ...mapActions(['fetchToken']),
