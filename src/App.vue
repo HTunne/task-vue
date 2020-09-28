@@ -7,7 +7,7 @@
             dark
             >
             <v-app-bar-nav-icon v-if="$vuetify.breakpoint.mobile" @click="navDrawer=true"></v-app-bar-nav-icon>
-            <span class="font-weight-thin text-h5">TASK-</span><span class="text-h5">VUE</span>
+            <span class="font-weight-thin text-h5">TASK-</span><span class="pr-4 text-h5">VUE</span>
             <template v-if="!$vuetify.breakpoint.mobile">
                 <v-btn v-for="item in navItems" :key="item.text" link @click="item.method" text class="text-subtitle-1">
                     <v-icon class="pr-2">{{ item.icon }}</v-icon>
@@ -61,7 +61,7 @@ export default {
     data() {
         return {
             alertShow: true,
-            navDrawer: true,
+            navDrawer: false,
             navItems: [
                 { icon: 'mdi-format-list-checks', text: 'Task List', method: this.onBtn },
                 { icon: 'mdi-calendar-refresh', text: 'Recurring Tasks', method: this.onRecurBtn }
@@ -95,7 +95,7 @@ export default {
             setTimeout(() => {
                 console.log('timeout');
                 this.alertShow = false;
-            }, 5000)
+            }, 2000)
         },
     }
 };

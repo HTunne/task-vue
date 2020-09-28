@@ -7,8 +7,11 @@
                     <v-list-item-content>
                         <span class="text-body-2" v-text="task.description">
                         </span>
-                        <v-btn depressed small outlined left color="primary" v-if="'project' in task" v-text="task.project" class="project-btn text-none font-weight-bold" @click.stop="$emit('update:search', 'p:' + task.project)">
-                        </v-btn>
+                        <span>
+                            <v-btn depressed small outlined left color="primary" v-if="'project' in task" v-text="task.project" class="project-btn text-none font-weight-bold" @click.stop="$emit('update:search', 'p:' + task.project)"
+                                >
+                            </v-btn>
+                        </span>
                         <v-item-group v-if="'tags' in task">
                             <v-btn
                                       v-for="tag in task.tags"

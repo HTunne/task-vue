@@ -1,5 +1,6 @@
 <template>
   <v-container
+    :fluid="$vuetify.breakpoint.mdAndDown"
     class="home pa-0"
     style="height: 100%"
   >
@@ -9,7 +10,7 @@
     <v-col class="main-col" v-if="!$vuetify.breakpoint.mobile">
       <router-view></router-view>
     </v-col>
-    <v-col cols=12 sm=5 lg=4 xl=3
+    <v-col cols=12 sm=5 md=4 xl=3
       class="main-col"
     >
       <taskList :tasks="tasks" type="pending"/>
