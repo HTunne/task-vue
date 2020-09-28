@@ -28,7 +28,7 @@
                    @click="onCloseOverlay"
                    color="accent"
                    small
-                   class="float-right"
+                   class="float-right mt-4"
                    fab>
                   <v-icon>mdi-close</v-icon>
               </v-btn>

@@ -2,12 +2,12 @@
     <v-container>
         <v-card light>
             <v-container>
-                <v-row>
+                <v-row :no-gutters="!this.$vuetify.breakpoint.mobile">
+                     <v-col align-self="center" cols="12">
+                        <v-btn class="float-right mr-4" icon @click="resetNewTask"><v-icon>mdi-refresh</v-icon></v-btn>
+                    </v-col>
                     <v-col>
                         <span class="text-h3">Add task...</span>
-                    </v-col>
-                     <v-col align-self="center" cols="1">
-                        <v-btn class="float-right mr-8" icon @click="resetNewTask"><v-icon>mdi-refresh</v-icon></v-btn>
                     </v-col>
                 </v-row>
             </v-container>

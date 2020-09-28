@@ -22,7 +22,7 @@
                    >
                 </v-select>
             </v-col>
-            <v-col cols="5">
+            <v-col cols="12" sm="5">
                 <v-text-field
                    clearable
                    v-model="tagField"
@@ -33,7 +33,7 @@
                    >
                 </v-text-field>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="11" sm="6">
                 <div id="task-chip-container" v-if="task.tags">
                     <v-chip
                                               v-for="(tag, index) in task.tags"
@@ -41,7 +41,7 @@
                                               depressed
                                               close
                                               style="margin: 0 5px 5px 0"
-                                              color="primary"
+                                              color="accent"
                                               :key="index"
                                               @click:close="task.tags = task.tags.filter(value => (value != tag))"
                                               class="text-none">
@@ -54,7 +54,7 @@
                    class="float-right"
                    icon
                    @click="showExtra = !showExtra">
-                   <v-icon :class="{ rotated: showExtra }">mdi-chevron-up</v-icon>
+                   <v-icon :class="{ rotated: showExtra }">mdi-chevron-down</v-icon>
                 </v-btn>
             </v-col>
         </v-row>

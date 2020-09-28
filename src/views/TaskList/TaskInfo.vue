@@ -2,15 +2,15 @@
     <v-container>
         <v-card light>
             <v-container>
-                <v-row>
+                <v-row :no-gutters="!this.$vuetify.breakpoint.mobile">
+                    <v-col align-self="center" cols="12">
+                        <v-btn class="float-right mr-4" icon @click="editSelectedTask"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
+                    </v-col>
                     <v-col>
                         <span class="text-h3" v-if="!selectedTask.uuid">Task Not Found</span>
                         <span class="text-h3" v-else>
                             Task {{ selectedTask.id > 0 ? selectedTask.id : selectedTask.uuid.slice(0,8) }} Info
                         </span>
-                    </v-col>
-                    <v-col align-self="center" cols="1">
-                        <v-btn class="float-right mr-8" icon @click="editSelectedTask"><v-icon>mdi-square-edit-outline</v-icon></v-btn>
                     </v-col>
                 </v-row>
                 <template v-if="selectedTask.uuid">
@@ -21,30 +21,30 @@
                         <v-col cols="12" v-if="selectedTask.project">
                             <span class="text-h6">Project: </span><v-chip large label outlined color="primary">{{ selectedTask.project }} </v-chip>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" sm="6">
                             <span class="text-h6">Status: </span><span class="text-h6 font-weight-light">{{ selectedTask.status }} </span>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="12" sm="6">
                             <span class="text-h6">Urgency: </span><span class="text-h6 font-weight-light">{{ selectedTask.urgency.toFixed(2) }}</span>
                         </v-col>
-                        <v-col cols="6" v-if="selectedTask.due">
+                        <v-col cols="12" sm="6" v-if="selectedTask.due">
                             <span class="text-h6">Due: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.due) }}</span>
                         </v-col>
-                        <v-col cols="6" v-if="selectedTask.scheduled">
+                        <v-col cols="12" sm="6" v-if="selectedTask.scheduled">
                             <span class="text-h6">Scheduled: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.until) }}</span>
                         </v-col>
-                        <v-col cols="6" v-if="selectedTask.until">
+                        <v-col cols="12" sm="6" v-if="selectedTask.until">
                             <span class="text-h6">Keep until: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.until) }}</span>
                         </v-col>
-                        <v-col cols="6" v-if="selectedTask.recur">
+                        <v-col cols="12" sm="6" v-if="selectedTask.recur">
                             <span class="text-h6">Recur every: </span><span class="text-h6 font-weight-light">{{ selectedTask.recur }}</span>
                         </v-col>
-                        <v-col cols="6" v-if="selectedTask.parent">
+                        <v-col cols="12" sm="6" v-if="selectedTask.parent">
                             <span class="text-h6">Parent task: </span><span class="text-h6 font-weight-light">{{ selectedTask.parent.id }}</span>
                         </v-col>
                     </v-row>
                     <v-row v-if="selectedTask.tags">
-                        <v-col cols=2>
+                        <v-col cols="12" sm="2">
                             <h3>Tags: </h3>
                         </v-col>
                         <v-col>
@@ -75,10 +75,10 @@
                     </v-row>
                     <v-expand-transition>
                     <v-row v-show="showExtra">
-                        <v-col cols="6">
+                        <v-col cols="12" sm="6">
                             <span class="text-h6">Entry: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.entry) }}</span>
                         </v-col>
-                        <v-col v-if="selectedTask.end" cols="6">
+                        <v-col v-if="selectedTask.end" cols="12" sm="6">
                             <span class="text-h6">End: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.end) }}</span>
                         </v-col>
                         <v-col cols="12">
@@ -210,11 +210,10 @@
                     </v-row>
                     </v-expand-transition>
                     <v-row>
-                        <v-col cols="6" class="align-self-center" v-if="selectedTask.start">
+                        <v-col cols="12" sm="6" class="align-self-center" v-if="selectedTask.start">
                             <span class="text-h6">Started: </span><span class="text-h6 font-weight-light">{{ formatDateTimeString(selectedTask.start) }}</span>
                         </v-col>
-                        <v-spacer></v-spacer>
-                        <v-col cols="6">
+                        <v-col cols="12">
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn

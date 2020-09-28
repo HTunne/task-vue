@@ -1,23 +1,23 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card light>
             <v-container>
-                <v-row>
+                <v-row :no-gutters="!this.$vuetify.breakpoint.mobile">
+                    <v-col align-self="center" cols="12">
+                        <v-btn class="float-right mr-4" icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
+                    </v-col>
                     <v-col>
                         <span class="text-h3" v-if="!editTask.uuid">Task Not Found</span>
                         <span class="text-h3" v-else>
                             Edit Task {{ editTask.id > 0 ? editTask.id : editTask.uuid.slice(0,8) }}
                         </span>
                     </v-col>
-                    <v-col align-self="center" cols="1">
-                        <v-btn class="float-right mr-8" icon @click="resetEditTask"><v-icon>mdi-refresh</v-icon></v-btn>
-                    </v-col>
                 </v-row>
             </v-container>
             <task-form :task.sync="editTask"/>
             <v-container>
                 <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" md="6">
                         <v-card-actions>
                             <v-btn
                                 :disabled="editTask.notFound"
@@ -29,6 +29,10 @@
                                 :to="{ name: 'TaskInfo' }">
                                 Cancel
                             </v-btn>
+                        </v-card-actions>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                        <v-card-actions>
                             <v-spacer></v-spacer>
                             <v-btn
                                 :disabled="editTask.notFound"
@@ -140,16 +144,3 @@ export default {
     },
 }
 </script>
-
-<style scoped>
-#task-chip-container {
-    display: flex;
-    align-items: center;
-    height: 100%;
-    flex-wrap: wrap;
-}
-
-#task-chip-container > span {
-    flex: 0 0 auto;
-}
-</style>

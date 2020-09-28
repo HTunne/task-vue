@@ -5,7 +5,10 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     breakpoint: {
-        mobileBreakpoint: 'xs'
+        mobileBreakpoint: 'xs',
+        thresholds: {
+            xs: 770,
+        }
     },
     theme: {
         themes: {
