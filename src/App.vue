@@ -29,7 +29,7 @@
         <v-main style="height: 1vh">
             <router-view/>
         </v-main>
-        <v-alert text dismissible class="ma-0" :type="alert.type" v-for="alert in alerts" :key="alert.message">
+        <v-alert text dismissible :value="alertOn" class="ma-0" :type="alert.type" v-for="alert in alerts" :key="alert.message">
             {{ alert.description }}
         </v-alert>
     </v-app>
@@ -39,6 +39,12 @@
 import { mapActions } from "vuex";
 export default {
     name: 'App',
+    data() {
+        return {
+            alertOn: true,
+            testy: 'hello'
+        }
+    },
     computed: {
         recurPage() {
             return this.$route.meta.recurPage
@@ -60,12 +66,15 @@ export default {
             if (this.recurPage) this.$router.push({ name: 'TaskNoneSelected' });
         },
     },
-    created() {
-        //this.fetchTaskList();
-    },
-    data: () => ({
-        //
-    }),
+    watch: {
+        alerts() {
+            this.alertOn = true;
+            setTimeout(() => {
+                console.log('timeout');
+                this.alertOn = false;
+            }, 5000)
+        },
+    }
 };
 </script>
 
