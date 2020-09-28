@@ -6,41 +6,24 @@
             color="primary"
             dark
             >
-            <div class="d-flex align-center">
-                <v-img
-                 alt="Vuetify Logo"
-                 class="shrink mr-2"
-                 contain
-                 src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-                 transition="scale-transition"
-                 width="40"
-                 />
-
-                    <v-img
-                 alt="Vuetify Name"
-                 class="shrink mt-1 hidden-sm-and-down"
-                 contain
-                 min-width="100"
-                 src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-                 width="100"
-                 />
-            </div>
-            <v-btn link @click="onBtn" text>
-                Task List
+            <v-btn link @click="onBtn" text class="text-subtitle-1">
+                <v-icon class="pr-2">mdi-format-list-checks</v-icon>
+            Task List
             </v-btn>
-            <v-btn link @click="onRecurBtn" text>
+            <v-btn link @click="onRecurBtn" text class="text-subtitle-1">
+                <v-icon class="pr-2">mdi-calendar-refresh</v-icon>
                 Recurring Tasks
             </v-btn>
 
             <v-spacer></v-spacer>
 
             <v-btn
-                 :retain-focus-on-click="false"
-                 link
-                 @click="onLogOut"
-                 text
-                 >
-                 <span class="mr-2">Log out</span>
+                :retain-focus-on-click="false"
+                link
+                @click="onLogOut"
+                text
+                >
+                <span class="mr-2 text-subtitle-1 font-weight-bold">Log out</span>
             </v-btn>
         </v-app-bar>
         <v-main style="height: 100vh">
