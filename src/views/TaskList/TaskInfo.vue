@@ -1,14 +1,6 @@
 <template>
-    <v-container v-if="loading" style="height: 100%">
-        <v-row class="mt-64" style="height: 100%">
-            <v-spacer></v-spacer>
-            <v-progress-circular indeterminate class="my-auto">
-            </v-progress-circular>
-            <v-spacer></v-spacer>
-        </v-row>
-    </v-container>
-    <v-container v-else>
-        <v-card>
+    <v-container>
+        <v-card light>
             <v-container>
                 <v-row>
                     <v-col>
@@ -61,7 +53,7 @@
                                  v-for="(tag, index) in selectedTask.tags"
                                  depressed
                                  style="margin: 0 5px 5px 0"
-                                 color="primary"
+                                 color="accent"
                                  :key="index"
                                  class="text-none">
                                     {{ tag }}
@@ -276,7 +268,6 @@ export default {
             annotationTextBox: '',
             showExtra: false,
             selectedDependency: null,
-            loading: false
         }
     },
     computed: {
@@ -299,35 +290,27 @@ export default {
             }
         },
         async onAddDepends () {
-            this.loading =  true;
             let taskUUID = this.selectedTask.uuid;
             let dependency = {
                 uuid: this.selectedDependency.uuid
             };
             await this.addDependency({taskUUID, dependency})
-            this.loading = false;
         },
         async onRemoveDepends (dependency) {
-            this.loading = true;
             let taskUUID = this.selectedTask.uuid;
             await this.removeDependency({taskUUID, dependency})
-            this.loading = false;
         },
         async onAddAnnotation () {
-            this.loading =  true;
             let taskUUID = this.selectedTask.uuid;
             let annotation = {
                 description: this.annotationTextBox
             };
             await this.addAnnotation({taskUUID, annotation})
             this.annotationTextBox = '';
-            this.loading = false;
         },
         async onRemoveAnnotation (annotation) {
-            this.loading =  true;
             let taskUUID = this.selectedTask.uuid;
             await this.removeAnnotation({taskUUID, annotation})
-            this.loading = false;
         },
         formatDateTimeString (dateTimeString) {
             let date = new Date(dateTimeString);
