@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-card>
+        <v-card light>
             <v-container>
                 <v-row>
                     <v-col>
