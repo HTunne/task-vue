@@ -182,6 +182,17 @@ export default new Vuex.Store({
                 await dispatch('fetchTaskList');
             }
         },
+        async restoreTask({ commit, dispatch }, taskUUID) {
+            let axios_conf = {
+                method: 'put',
+                url: taskUUID + '/restore'
+            }
+            const response = await dispatch('handleRequest', axios_conf);
+            if(response) {
+                commit('push_alert', response.data.message)
+                await dispatch('fetchTaskList');
+            }
+        },
         async startTask({ commit, dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
