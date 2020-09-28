@@ -26,16 +26,15 @@
                     </v-list-item-content>
                     <v-list-item-avatar size="56" class="font-weight-bold" v-text="task.urgency.toFixed(2)" :style="{ color: urgencyColor }"></v-list-item-avatar>
                     <v-list-item-action>
-                        <v-btn fab depressed :disabled="task.status === 'completed'" @click.stop="windowIndexIncrement"><v-icon>mdi-chevron-left</v-icon></v-btn>
+                        <v-btn fab depressed @click.stop="windowIndexIncrement"><v-icon>mdi-chevron-left</v-icon></v-btn>
                     </v-list-item-action>
                 </div>
             </v-window-item>
             <v-window-item :value="1">
                 <div class="window-container">
                     <v-spacer></v-spacer>
-                    <v-list-item-action style="flex-direction: row">
+                    <v-list-item-action class="flex-row">
                         <v-btn
-                            :disabled="task.status === 'completed'"
                             @click.stop="windowIndex = 2"
                             fab
                             depressed
@@ -43,34 +42,43 @@
                             color="error">
                             <v-icon>mdi-trash-can-outline</v-icon>
                         </v-btn>
+                        <template v-if="task.status !== 'completed'">
+                            <v-btn
+                                  @click.stop="stopTask(task.uuid)"
+                                  fab
+                                  depressed
+                                  style="margin: 0 5px 5px 0"
+                                  color="warning"
+                                  v-if="task.start">
+                                <v-icon> mdi-stop</v-icon>
+                            </v-btn>
+                            <v-btn
+                                  @click.stop="startTask(task.uuid)"
+                                  fab
+                                  depressed
+                                  style="margin: 0 5px 5px 0"
+                                  color="info"
+                                  v-else>
+                                <v-icon>mdi-play</v-icon>
+                            </v-btn>
+                        </template>
                         <v-btn
-                            :disabled="task.status === 'completed'"
-                            @click.stop="stopTask(task.uuid)"
-                            fab
-                            depressed
-                            style="margin: 0 5px 5px 0"
-                            color="warning"
-                            v-if="task.start">
-                            <v-icon> mdi-stop</v-icon>
-                        </v-btn>
-                        <v-btn
-                            :disabled="task.status === 'completed'"
-                            @click.stop="startTask(task.uuid)"
-                            fab
-                            depressed
-                            style="margin: 0 5px 5px 0"
-                            color="info"
-                            v-else>
-                            <v-icon>mdi-play</v-icon>
-                        </v-btn>
-                        <v-btn
-                            :disabled="task.status === 'completed'"
+                            v-if="task.status !== 'completed'"
                             @click.stop="doneTask(task.uuid)"
                             fab
                             depressed
                             style="margin: 0 5px 5px 0"
                             color="success">
                             <v-icon>mdi-check</v-icon>
+                        </v-btn>
+                        <v-btn
+                            v-else
+                            @click.stop="restoreTask(task.uuid)"
+                            fab
+                            depressed
+                            style="margin: 0 5px 5px 0"
+                            color="warning">
+                            <v-icon>mdi-undo-variant</v-icon>
                         </v-btn>
                         <v-btn
                             @click.stop="windowIndex = 0"
