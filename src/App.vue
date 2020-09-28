@@ -26,9 +26,12 @@
                 <span class="mr-2 text-subtitle-1 font-weight-bold">Log out</span>
             </v-btn>
         </v-app-bar>
-        <v-main style="height: 100vh">
+        <v-main style="height: 1vh">
             <router-view/>
         </v-main>
+        <v-alert text dismissible class="ma-0" :type="alert.type" v-for="alert in alerts" :key="alert.message">
+            {{ alert.description }}
+        </v-alert>
     </v-app>
 </template>
 
@@ -39,7 +42,10 @@ export default {
     computed: {
         recurPage() {
             return this.$route.meta.recurPage
-        }
+        },
+        alerts() {
+            return this.$store.getters.getAlerts
+        },
     },
     methods: {
         ...mapActions(["fetchTaskList", "clearToken"]),

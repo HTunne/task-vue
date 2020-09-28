@@ -7,11 +7,6 @@
     style="height: 100%"
   >
     <v-col class="main-col" v-if="!$vuetify.breakpoint.mobile">
-      <div>
-          <v-alert text dismissible :type="alert.type" v-for="alert in alerts" :key="alert.message">
-              {{ alert.description }}
-          </v-alert>
-      </div>
       <router-view></router-view>
     </v-col>
     <v-col cols=12 sm=5 lg=4 xl=3
