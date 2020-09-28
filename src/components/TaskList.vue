@@ -166,7 +166,7 @@ export default {
 .v-data-iterator > div {
     display: flex;
     flex: 1 1 auto;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .v-data-iterator > div > div {
