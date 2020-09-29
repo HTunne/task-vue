@@ -83,7 +83,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['doneTask', 'startTask', 'stopTask', 'restoreTask']),
+        ...mapActions(['doneTask', 'startTask', 'stopTask', 'deleteTask', 'restoreTask']),
     },
     props: ['disabled', 'completed', 'started', 'id', 'uuid'],
 }
