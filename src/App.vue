@@ -89,15 +89,6 @@ export default {
             if (this.recurPage) this.$router.push({ name: 'TaskNoneSelected' });
         },
     },
-    watch: {
-        alerts() {
-            this.alertShow = true;
-            setTimeout(() => {
-                console.log('timeout');
-                this.alertShow = false;
-            }, 2000)
-        },
-    }
 };
 </script>
 

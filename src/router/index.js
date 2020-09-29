@@ -55,7 +55,6 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  !store.commit('clear_alerts')
   if (to.name !== 'Login' && !store.getters.getHasToken) {
       const loginpath = window.location.pathname;
       console.log(loginpath)

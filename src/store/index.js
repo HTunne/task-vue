@@ -54,6 +54,9 @@ export default new Vuex.Store({
         push_alert(state, alert_obj) {
             if (alert_obj) state.alerts.push(alert_obj);
         },
+        pop_alert(state) {
+            state.alerts.pop();
+        },
         clear_alerts(state) {
             state.alerts = []
         }
@@ -86,6 +89,15 @@ export default new Vuex.Store({
                 console.log(error);
             }
         },
+        async handleAlert({ commit }, alert_obj) {
+            if (alert_obj) {
+                commit('push_alert', alert_obj);
+                setTimeout(() => {
+                    console.log('timeout');
+                    commit('pop_alert');
+                }, 3000)
+            }
+        },
         async fetchTaskList({ dispatch, commit }) {
             await dispatch('syncTaskList');
             let axios_conf = {
@@ -93,18 +105,18 @@ export default new Vuex.Store({
             }
             const response = await dispatch('handleRequest', axios_conf)
             if (response) {
-                commit('push_alert', response.data.message);
+                dispatch('handleAlert', response.data.message);
                 commit('set_tasks', response.data.tasks);
             }
         },
-        async syncTaskList({ dispatch, commit }) {
+        async syncTaskList({ dispatch }) {
             let axios_conf = {
                 method: 'get',
                 url: 'sync'
             }
             const response = await dispatch('handleRequest', axios_conf)
             if (response) {
-                commit('push_alert', response.data.message);
+                dispatch('handleAlert', response.data.message);
             }
         },
         async handleRequest({ dispatch, commit, getters }, axios_conf) {
@@ -134,7 +146,7 @@ export default new Vuex.Store({
                 }
             }
         },
-        async addTask({ commit, dispatch }, newTask) {
+        async addTask({ dispatch }, newTask) {
             let axios_conf = {
                 method: 'post',
                 data: newTask
@@ -142,11 +154,11 @@ export default new Vuex.Store({
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
                 dispatch('handleRedirectToInfo', response)
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async updateTask({ commit, dispatch }, updatedTask) {
+        async updateTask({ dispatch }, updatedTask) {
             let axios_conf = {
                 method: 'put',
                 data: updatedTask,
@@ -155,11 +167,11 @@ export default new Vuex.Store({
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
                 dispatch('handleRedirectToInfo', response)
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async deleteTask({ commit, dispatch }, taskUUID) {
+        async deleteTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'delete',
                 url: taskUUID
@@ -167,51 +179,51 @@ export default new Vuex.Store({
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
                 dispatch('handleRedirectToInfo', response)
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async doneTask({ commit, dispatch }, taskUUID) {
+        async doneTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/done'
             }
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async restoreTask({ commit, dispatch }, taskUUID) {
+        async restoreTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/restore'
             }
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async startTask({ commit, dispatch }, taskUUID) {
+        async startTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/start'
             }
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
-        async stopTask({ commit, dispatch }, taskUUID) {
+        async stopTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/stop'
             }
             const response = await dispatch('handleRequest', axios_conf);
             if(response) {
-                commit('push_alert', response.data.message)
+                dispatch('handleAlert', response.data.message)
                 await dispatch('fetchTaskList');
             }
         },
