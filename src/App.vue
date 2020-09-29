@@ -63,8 +63,21 @@ export default {
             alertShow: true,
             navDrawer: false,
             navItems: [
-                { icon: 'mdi-format-list-checks', text: 'Task List', method: this.onBtn },
-                { icon: 'mdi-calendar-refresh', text: 'Recurring Tasks', method: this.onRecurBtn }
+                {
+                    icon: 'mdi-format-list-checks',
+                    text: 'Task List',
+                    method: () => this.navTo('TaskNoneSelected')
+                },
+                {
+                    icon: 'mdi-calendar-refresh',
+                    text: 'Recurring Tasks',
+                    method: () => this.navTo('TaskRecurNoneSelected')
+                },
+                {
+                    icon: 'mdi-calendar-month',
+                    text: 'Calendar',
+                    method: () => this.navTo('Calendar')
+                }
             ]
         }
     },
@@ -82,12 +95,9 @@ export default {
             this.clearToken();
             this.$router.push({ name: 'Login' })
         },
-        onRecurBtn () {
-            if (!this.recurPage) this.$router.push({ name: 'TaskRecurNoneSelected' });
-        },
-        onBtn () {
-            if (this.recurPage) this.$router.push({ name: 'TaskNoneSelected' });
-        },
+        navTo (routeName) {
+            if (this.$route.name !== routeName) this.$router.push({ name: routeName });
+        }
     },
 };
 </script>
@@ -95,9 +105,6 @@ export default {
 <style>
 * {
     scrollbar-width: thin;
-}
-
-html {
 }
 
 /* Works on Chrome/Edge/Safari */
