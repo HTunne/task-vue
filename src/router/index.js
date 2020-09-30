@@ -41,7 +41,16 @@ const routes = [
     {
         path: '/calendar',
         name: 'Calendar',
-        component: () => import(/* webpackChunkName: "calendar" */ '../views/Calendar.vue')
+        component: () => import(
+            /* webpackChunkName: "calendar" */ '../views/Calendar.vue'
+        )
+    },
+    {
+        path: '/calendar/:date',
+        name: 'Day',
+        component: () => import(
+            /* webpackChunkName: "calendar" */ '../views/Day.vue'
+        )
     }
 ]
 
