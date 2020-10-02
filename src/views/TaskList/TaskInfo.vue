@@ -258,13 +258,17 @@ export default {
                 return task;
             return { 'notFound': true };
         },
+        recurPage() {
+            return this.$route.meta.recurPage
+        }
     },
     methods: {
         ...mapActions([]),
         editSelectedTask () {
             if (this.selectedTask.uuid) {
                 let uuid = this.selectedTask.uuid;
-                this.$router.push({ name: 'TaskEdit', params: { uuid } })
+                if (this.recurPage) this.$router.push({ name: 'TaskRecurEdit', params: { uuid } })
+                else this.$router.push({ name: 'TaskEdit', params: { uuid } })
             }
         },
         async onAddDepends () {
