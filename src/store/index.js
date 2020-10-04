@@ -83,7 +83,7 @@ export default new Vuex.Store({
                 commit('set_token', response.data.token);
                 let tmpAxiosConf = getters.getTmpAxiosConf
                 if (tmpAxiosConf) {
-                    dispatch('handleRequest', tmpAxiosConf);
+                    dispatch('handleRequest', { axios_conf: tmpAxiosConf} );
                 }
             } catch (error) {
                 console.log(error);
@@ -93,7 +93,6 @@ export default new Vuex.Store({
             if (alert_obj) {
                 commit('push_alert', alert_obj);
                 setTimeout(() => {
-                    console.log('timeout');
                     commit('pop_alert');
                 }, 3000)
             }
@@ -103,60 +102,54 @@ export default new Vuex.Store({
             let axios_conf = {
                 method: 'get',
             }
-            const response = await dispatch('handleRequest', axios_conf)
-            if (response) {
-                dispatch('handleAlert', response.data.message);
-                commit('set_tasks', response.data.tasks);
-            }
+            const response = await dispatch(
+                'handleRequest',
+                { axios_conf, fetchTasks: false }
+            )
+            if (response) commit('set_tasks', response.data.tasks);
         },
         async syncTaskList({ dispatch }) {
             let axios_conf = {
                 method: 'get',
                 url: 'sync'
             }
-            const response = await dispatch('handleRequest', axios_conf)
-            if (response) {
-                dispatch('handleAlert', response.data.message);
-            }
+            return await dispatch('handleRequest', { axios_conf, fetchTasks: false })
         },
-        async handleRequest({ dispatch, commit, getters }, axios_conf) {
+        async handleRequest({ dispatch, commit, getters }, { axios_conf, fetchTasks = true }) {
             commit('set_tmp_axios_conf', null);
             axios_conf['baseURL'] = getters.getBaseUrl
             axios_conf['headers'] = {
                 'x-access-tokens': getters.getToken
             }
             try {
-                return await axios(axios_conf);
+                const response = await axios(axios_conf);
+                if(response) {
+                    dispatch('handleAlert', response.data.message)
+                    console.log(fetchTasks);
+                    if (fetchTasks) {
+                        await dispatch('fetchTaskList');
+                    }
+                    if (response.data.message
+                        && response.data.message.type === 'error') {
+                        return false
+                    }
+                    return response
+                }
             } catch (error) {
+                console.log(error)
                 dispatch('clearToken');
                 commit('set_tmp_axios_conf', axios_conf);
                 router.push({ name: 'Login' })
             }
+            return false;
 
-        },
-        handleRedirectToInfo(context, response) {
-            if ((response.data.message &&
-                (response.data.message.type !== "error") &&
-                response.data.task.uuid)) {
-                let uuid = response.data.task.uuid;
-                if (response.data.task.status === 'recurring') {
-                    router.push({ name: 'TaskRecurInfo', params: { uuid } });
-                } else {
-                    router.push({ name: 'TaskInfo', params: { uuid } });
-                }
-            }
         },
         async addTask({ dispatch }, newTask) {
             let axios_conf = {
                 method: 'post',
                 data: newTask
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleRedirectToInfo', response)
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async updateTask({ dispatch }, updatedTask) {
             let axios_conf = {
@@ -164,68 +157,42 @@ export default new Vuex.Store({
                 data: updatedTask,
                 url: updatedTask.uuid
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleRedirectToInfo', response)
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async deleteTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'delete',
                 url: taskUUID
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleRedirectToInfo', response)
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async doneTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/done'
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async restoreTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/restore'
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async startTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/start'
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async stopTask({ dispatch }, taskUUID) {
             let axios_conf = {
                 method: 'put',
                 url: taskUUID + '/stop'
             }
-            const response = await dispatch('handleRequest', axios_conf);
-            if(response) {
-                dispatch('handleAlert', response.data.message)
-                await dispatch('fetchTaskList');
-            }
+            return await dispatch('handleRequest', { axios_conf });
         },
         async addAnnotation({ dispatch }, { taskUUID, annotation }) {
             let axios_conf = {
@@ -233,8 +200,7 @@ export default new Vuex.Store({
                 url: taskUUID + '/add_annotation',
                 data: annotation
             }
-            if (await dispatch('handleRequest', axios_conf))
-                await dispatch('fetchTaskList');
+            return await dispatch('handleRequest', { axios_conf });
         },
         async removeAnnotation({ dispatch }, { taskUUID, annotation }) {
             let axios_conf = {
@@ -242,8 +208,7 @@ export default new Vuex.Store({
                 url: taskUUID + '/remove_annotation',
                 data: annotation
             }
-            if (await dispatch('handleRequest', axios_conf))
-                await dispatch('fetchTaskList');
+            return await dispatch('handleRequest', { axios_conf });
         },
         async addDependency({ dispatch }, { taskUUID, dependency }) {
             let axios_conf = {
@@ -251,8 +216,7 @@ export default new Vuex.Store({
                 url: taskUUID + '/add_dependency',
                 data: dependency
             }
-            if (await dispatch('handleRequest', axios_conf))
-                await dispatch('fetchTaskList');
+            return await dispatch('handleRequest', { axios_conf });
         },
         async removeDependency({ dispatch }, { taskUUID, dependency }) {
             let axios_conf = {
@@ -260,8 +224,7 @@ export default new Vuex.Store({
                 url: taskUUID + '/remove_dependency',
                 data: dependency
             }
-            if (await dispatch('handleRequest', axios_conf))
-                await dispatch('fetchTaskList');
+            return await dispatch('handleRequest', { axios_conf });
         },
     },
     modules: {
