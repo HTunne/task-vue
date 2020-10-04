@@ -43,9 +43,8 @@ export default {
     },
     methods: {
         ...mapActions(["addTask"]),
-        onAddTask () {
-            this.addTask(this.newTask);
-            this.resetNewTask();
+        async onAddTask () {
+            if (await this.addTask(this.newTask)) this.resetNewTask();
         },
         resetNewTask () {
             this.newTask = {};
