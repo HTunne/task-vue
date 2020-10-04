@@ -125,7 +125,6 @@ export default new Vuex.Store({
                 const response = await axios(axios_conf);
                 if(response) {
                     dispatch('handleAlert', response.data.message)
-                    console.log(fetchTasks);
                     if (fetchTasks) {
                         await dispatch('fetchTaskList');
                     }
