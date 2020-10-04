@@ -26,7 +26,7 @@
                             </v-btn>
                             <v-btn
                                 :disabled="editTask.notFound"
-                                :to="{ name: 'TaskInfo' }">
+                                @click="onCancel">
                                 Cancel
                             </v-btn>
                         </v-card-actions>
@@ -71,6 +71,9 @@ export default {
                 return task;
             return { 'notFound': true };
         },
+        recurPage() {
+            return this.$route.meta.recurPage
+        },
     },
     methods: {
         ...mapActions(['updateTask', 'deleteTask']),
@@ -79,6 +82,11 @@ export default {
             if (this.selectedTask.tags) {
                 this.editTask.tags = this.selectedTask.tags.slice();
             }
+        },
+        onCancel () {
+            let uuid = this.selectedTask.uuid;
+            if (this.recurPage) this.$router.push({ name: 'TaskRecurInfo', params: { uuid } });
+            else this.$router.push({ name: 'TaskInfo', params: { uuid } });
         },
         async onUpdateTask () {
             await this.updateTask(this.editTask);
