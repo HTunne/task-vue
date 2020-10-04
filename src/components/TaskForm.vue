@@ -34,16 +34,16 @@
                 </v-text-field>
             </v-col>
             <v-col cols="11" sm="6">
-                <div id="task-chip-container" v-if="task.tags">
+                <div id="task-chip-container">
                     <v-chip
-                                              v-for="(tag, index) in task.tags"
+                                              v-for="(tag, index) in tagList"
                                               small
                                               depressed
                                               close
                                               style="margin: 0 5px 5px 0"
                                               color="accent"
                                               :key="index"
-                                              @click:close="task.tags = task.tags.filter(value => (value != tag))"
+                                              @click:close="removeTag(tag)"
                                               class="text-none">
                                               {{ tag }}
                     </v-chip>
@@ -88,7 +88,8 @@ export default {
         return {
             priorities: ['H', 'M', 'L'],
             tagField: undefined,
-            showExtra: false
+            showExtra: false,
+            tagList: []
         }
     },
     computed: {
@@ -98,27 +99,22 @@ export default {
     },
     methods: {
         appendTag () {
-            let tag = this.tagField.trim();
+            let tag = this.tagField.trim().replace(/\s+/g, "-");
             console.log('append ' + tag);
-            if (!(this.task.tags)) {
-                this.task.tags = [tag]
-            } else if (!(this.task.tags.includes(tag))) {
-                this.task.tags.push(tag);
-            }
+            this.tagList.push(tag);
             this.tagField = undefined;
         },
-        onChangeTag (event) {
-            console.log('change');
-            console.log(event);
-        },
-        onInputTag (event) {
-            console.log('input');
-            console.log(event);
-            this.tagField = event.replace('j','');
+        removeTag(tag) {
+            console.log(tag)
+            this.tagList = this.tagList.filter(item => item !== tag)
         }
 
+    },
+    watch: {
+        tagList: function() {
+            this.task.tags = this.tagList;
+        }
     }
-
 }
 </script>
 
