@@ -97,30 +97,37 @@ export default {
             );
 
             let searchList = search == null ? [] : search.toString().split(' ');
-            for (let i = 0; i < searchList.length; i++) {
-                if (searchList[i].startsWith('+')) {
+            searchList.forEach(searchItem => {
+                if (searchItem.startsWith('+')) {
                     items = items.filter(
                         item => {
                             return (
                                 ('tags' in item)
-                                && (item.tags.includes(searchList[i].slice(1)))
+                                && (item.tags.includes(searchItem.slice(1)))
                             )
                         }
                     );
                 } else if (
-                    (searchList[i].startsWith('project:'))
-                    || (searchList[i].startsWith('p:'))
+                    (searchItem.startsWith('project:'))
+                    || (searchItem.startsWith('p:'))
                 ) {
                     items = items.filter(
                         item => {
                             return (
                                 ('project' in item)
-                                && (item.project === searchList[i].split(':')[1])
+                                && (item.project === searchItem.split(':')[1])
                             )
                         }
                     );
+                } else if (/^\/.*\/$/.test(searchItem)) {
+                    console.log(searchItem.slice(0,-1));
+                    items = items.filter(
+                        item => {
+                            return (item.description.indexOf(searchItem.slice(1,-1))>0);
+                        }
+                    );
                 }
-            }
+            });
             return items;
         },
         compareUrgency: function(a, b) {
