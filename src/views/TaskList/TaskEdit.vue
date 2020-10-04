@@ -35,6 +35,7 @@
                         <task-options
                             :disabled="!!editTask.notFound"
                             :completed="editTask.status === 'completed'"
+                            :recur="recurPage"
                             :started="!!editTask.start"
                             :id="editTask.id"
                             :uuid="editTask.uuid"

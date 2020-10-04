@@ -217,6 +217,7 @@
                             <task-options
                                :disabled="!!selectedTask.notFound"
                                :completed="selectedTask.status === 'completed'"
+                               :recur="recurPage"
                                :started="!!selectedTask.start"
                                :id="selectedTask.id"
                                :uuid="selectedTask.uuid"

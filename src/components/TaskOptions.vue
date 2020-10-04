@@ -8,40 +8,42 @@
             color="error">
             <v-icon>mdi-trash-can-outline</v-icon>
         </v-btn>
-        <template v-if="!completed">
+        <template v-if="!recur">
+            <template v-if="!completed">
+                <v-btn
+                      :disabled="disabled"
+                      @click="stopTask(uuid)"
+                      fab
+                      color="warning"
+                      v-if="started">
+                    <v-icon> mdi-stop</v-icon>
+                </v-btn>
+                <v-btn
+                      :disabled="disabled"
+                      @click="startTask(uuid)"
+                      fab
+                      color="info"
+                      v-else>
+                    <v-icon>mdi-play</v-icon>
+                </v-btn>
+                <v-btn
+                      v-if="!completed"
+                      :disabled="disabled"
+                      @click="doneTask(uuid)"
+                      fab
+                      color="success">
+                    <v-icon>mdi-check</v-icon>
+                </v-btn>
+            </template>
             <v-btn
-            :disabled="disabled"
-            @click="stopTask(uuid)"
-            fab
-            color="warning"
-            v-if="started">
-                <v-icon> mdi-stop</v-icon>
-            </v-btn>
-            <v-btn
-            :disabled="disabled"
-            @click="startTask(uuid)"
-            fab
-            color="info"
-            v-else>
-                <v-icon>mdi-play</v-icon>
+                      v-else
+                      :disabled="disabled"
+                      @click="restoreTask(uuid)"
+                      fab
+                      color="warning">
+                <v-icon>mdi-undo-variant</v-icon>
             </v-btn>
         </template>
-        <v-btn
-            v-if="!completed"
-            :disabled="disabled"
-            @click="doneTask(uuid)"
-            fab
-            color="success">
-            <v-icon>mdi-check</v-icon>
-        </v-btn>
-        <v-btn
-            v-else
-            :disabled="disabled"
-            @click="restoreTask(uuid)"
-            fab
-            color="warning">
-            <v-icon>mdi-undo-variant</v-icon>
-        </v-btn>
         <v-overlay
             :value="deletePromptOverlay">
             <v-card light>
@@ -85,6 +87,6 @@ export default {
     methods: {
         ...mapActions(['doneTask', 'startTask', 'stopTask', 'deleteTask', 'restoreTask']),
     },
-    props: ['disabled', 'completed', 'started', 'id', 'uuid'],
+    props: ['disabled', 'completed', 'recur', 'started', 'id', 'uuid'],
 }
 </script>
